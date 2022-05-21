@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+a {
+  cursor: pointer;
+}
+#header {
+  background-color: #fff4ee;
+}
+.DropdownItem {
+  color: #051821;
+  font-size: 15px;
+  margin: 3px;
+}
+.dropdown-item:hover {
+  border-radius: 20px;
+  background-color: #fff4ee;
+}
+.BrudAdmin {
+  margin-top: 3px;
+  color: #051821;
+  font-weight: 550;
+  font-size: 20px;
+}
+.BrudAdmin b {
+  color: #051821;
+  font-weight: 800;
+}
+.userName {
+  color: #051821;
+  font-size: 15px;
+  font-weight: 600;
+}
+.sidebar {
+  background: #fff;
+}
+.menuIcon {
+  color: #051821;
+  margin-right: 5px;
+}
+.menuItem {
+  color: #051821;
+  font-size: 16px;
+  padding: 5px;
+  margin-left: 5px;
+}
+.menuItem:hover {
+  font-weight: 600;
+}
+.menuItemDiv {
+  padding: 3px;
+  padding-left: 10px;
+}
+.menuItemDiv:hover {
+  background-color: #fff4ee;
+  border-radius: 15px;
+}
+.active div {
+  box-shadow: 0px 1px 0px #f55800;
+}
+.active i {
+  color: #f55800;
+}
+.active span {
+  color: #f55800;
+  font-weight: 800;
+}
+.basePath {
+  color: #051821;
+  font-weight: 500;
+  font-size: 17px;
+}
+.currentPath {
+  font-weight: 500;
+  font-size: 17px;
+}
+.page-header {
+  color: #051821;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+/* ====================DASHBOARD==================== */
+
+.widget .stats-info h4 {
+  font-size: 18px !important;
+}
+.widget .stats-info p {
+  margin-top: 10px !important;
+}
+
+/* ====================PROFILE PAGE==================== */
+.panel {
+  border-radius: 20px;
+}
+.profileForm input {
+  border-radius: 20px;
+}
+.profileForm label {
+  font-weight: 600;
+}
+.changePassForm label {
+  font-weight: 600;
+}
+.changePassForm input {
+  border-radius: 20px;
+}
+.profileForm input[type='file']::file-selector-button {
+  border-radius: 20px;
+  border: 2px solid #ffdcc8;
+  background-color: #fff4ee;
+  transition: 1s;
+  margin-top: -3px;
+}
+
+.profileForm input[type='file']::file-selector-button:hover {
+  background-color: #ffdcc8;
+  border: 2px solid #ffdcc8;
+  cursor: pointer;
+}
+
+/* ====================GENERAL==================== */
+
+.edit:hover {
+  color: blue;
+}
+.editBtn:hover {
+  color: #000000;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.delete:hover {
+  color: red;
+}
+.addCategory {
+  margin-bottom: 50px;
+}
+input {
+  padding-left: 10px;
+  margin: 10px;
+}
+.mainBody {
+  border-radius: 20px;
+}
+
+/* ====================RESTAURANT-DETAIL==================== */
+
+.restaurant_heading {
+  color: #051821;
+  font-weight: 600;
+  font-size: 16px;
+}
+.RestName {
+  background-color: #fff4ee;
+}
+.restaurant_data {
+  color: #404040;
+  font-weight: 500;
+  /* font-size: 16px; */
+}
+.RestData {
+  justify-content: center;
+}
+.restaurantDetail {
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.restaurantImage {
+  display: flex;
+  overflow: auto;
+}
+.restaurant_Image {
+  height: 100px;
+  width: 170px;
+  margin: 5px;
+  box-shadow: 0px 6px 10px #b7b7b7;
+}
+.table th {
+  color: #051821;
+  font-weight: 600;
+}
+
+/* ====================OrdersDetails==================== */
+
+.team-boxed p {
+  color: #7d8285;
+}
+
+.team-boxed h2 {
+  font-weight: bold;
+  margin-bottom: 40px;
+  padding-top: 40px;
+  color: inherit;
+}
+
+@media (max-width: 767px) {
+  .team-boxed h2 {
+    margin-bottom: 25px;
+    padding-top: 25px;
+    font-size: 24px;
+  }
+}
+
+.team-boxed .people {
+  padding: 50px 0;
+}
+
+.team-boxed .item {
+  text-align: center;
+}
+.team-boxed .CardImage {
+  border-radius: 20px;
+  max-width: 80%;
+  max-height: 200px;
+  text-align: center !important;
+}
+.team-boxed .item .box {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(#ffc3a0, #ffdcc8);
+  box-shadow: 5px 5px 5px #757575;
+  background-color: #ffdcc8;
+  margin-bottom: 30px;
+  border-radius: 20px;
+}
+.team-boxed .item .box:hover {
+  transition: 2s !important;
+  background: linear-gradient(#ffa876, #ffdcc8);
+}
+
+.team-boxed .item .boxDetail {
+  text-align: left;
+}
+.team-boxed .item .name {
+  font-weight: bold;
+  margin-top: 28px;
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.team-boxed .item .title {
+  font-weight: bold;
+  color: #000;
+  font-size: 16px;
+}
+
+.team-boxed .item .modifiers {
+  color: #000;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.team-boxed .item .modifiersListItem {
+  color: #4b4b4b;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+}
+
+/* =================hide Scroll bar ===================== */
+.restoScroll::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+.restoScroll::-webkit-scrollbar-thumb {
+  background: #ff0000;
+}
+/* ================= Update Restaurant detail ===================== */
+
+.updateResto {
+  max-width: 600px;
+}
+@media (max-width: 767px) {
+  .updateResto {
+    max-width: auto;
+  }
+}
+.updateResto input,
+.updateResto textarea {
+  border-radius: 20px;
+}
+.updateResto label {
+  font-weight: 600;
+  font-size: 16px;
+}
+.updateResto .fileInput {
+  margin-left: -9px;
+}
