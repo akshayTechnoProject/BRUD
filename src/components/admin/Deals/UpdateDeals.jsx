@@ -15,6 +15,7 @@ export default function UpdateDeals() {
   const [deal, setdeal] = useState({
     ...data1,
     img: data1.image.split("/").pop(),
+    // item_id: data1.item_id.split(","),
   });
   const [error, setError] = useState({});
 
@@ -29,7 +30,7 @@ export default function UpdateDeals() {
   const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
   const [change, setChange] = useState(false);
-  const [itemIDArray, setItemIDArray] = useState([]);
+  const [itemIDArray, setItemIDArray] = useState(data1.item_id.split(","));
   const [itemNameArray, setItemNameArray] = useState([]);
   const [restDataID, setRestDataID] = useState(deal.restaurant_id);
   const [startDate, setStartDate] = useState();
@@ -96,7 +97,7 @@ export default function UpdateDeals() {
         console.log("getItemList", response["data"]["data"]);
         setGetItemList(response["data"]["data"]);
         let ktemp = response["data"]["data"].filter(
-          (e, i) => e.id == data1.item_id
+          (e, i) => e.id == deal.item_id
         );
         setdeal({
           ...deal,
@@ -146,7 +147,7 @@ export default function UpdateDeals() {
       isValid = false;
       error["restaurant"] = "Please select restaurant";
     }
-    if (!deal.item_id) {
+    if (itemIDArray.length == 0) {
       isValid = false;
       error["restItems"] = "Please select restaurant item";
     }
@@ -255,13 +256,12 @@ export default function UpdateDeals() {
     setDisable(true);
 
     if (validate()) {
-      console.log(deal);
       const myurl = "http://54.177.165.108:3000/api/admin/update-deals";
       var bodyFormData = new URLSearchParams();
       bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
       bodyFormData.append("deals_id", deal.id);
       bodyFormData.append("restaurant_id", deal.restaurant_id);
-      bodyFormData.append("item_id", deal.item_id);
+      bodyFormData.append("item_id", itemIDArray);
       bodyFormData.append("pts_one", deal.pts_one);
       bodyFormData.append("title", deal.title);
       bodyFormData.append("short_desc", deal.short_desc);
@@ -401,7 +401,7 @@ export default function UpdateDeals() {
                             }
                           }}
                         >
-                          <option value={deal.item_id}>{deal.item_name}</option>
+                          <option selected>Choose Items</option>
                           {getItemList.map((e, i) => {
                             return (
                               <option value={e?.id} name={e?.item_name}>
