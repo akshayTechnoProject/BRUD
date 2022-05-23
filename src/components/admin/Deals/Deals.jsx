@@ -135,12 +135,6 @@ const Deals = () => {
 
   useEffect(() => {
     getDeals();
-    //resto.map((e, i) => {
-    //restoListEmail.push(e.email);
-    //restoList.push(e.restaurant_name);
-    //});
-    //setRestoListEmail([...new Set(restoListEmail)]);
-    //setRestoList([...new Set(restoList)]);
 
     document.getElementById("page-loader").style.display = "none";
 
@@ -384,9 +378,14 @@ const Deals = () => {
                                   className="fa fa-pen edit"
                                   style={{ cursor: "pointer" }}
                                   onClick={() => {
+                                    console.log(e);
                                     history.push({
                                       pathname: "/updateDeals",
-                                      state: data[i],
+                                      state: {
+                                        ...data[i],
+                                        restaurant_id: e.restaurant_id,
+                                        item_id: e.item_id,
+                                      },
                                     });
                                   }}
                                 ></i>
