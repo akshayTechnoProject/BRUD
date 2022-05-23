@@ -60,20 +60,6 @@ const Deals = () => {
   let history = useHistory();
 
   const [dealsList, setDealsList] = useState([]);
-  function tConvert(time) {
-    // Check correct time format and split into components
-    time = time
-      .toString()
-      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-
-    if (time.length > 1) {
-      // If time format correct
-      time = time.slice(1); // Remove full string match value
-      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
-      time[0] = +time[0] % 12 || 12; // Adjust hours
-    }
-    return time.join(''); // return adjusted time or original string
-  }
 
   const getDeals = (id) => {
     const myURL = 'http://54.177.165.108:3000/api/admin/deals-list';
@@ -95,7 +81,7 @@ const Deals = () => {
           e = { ...e, sr_no: i + 1 };
           e = {
             ...e,
-            createdAt: e?.createdAt ? setDateFormat(e.createdAt) : 'N/A',
+            createdAt: e?.createdAt ? setDateFormat(e?.createdAt) : 'N/A',
             description: e?.description ? e?.description : 'N/A',
             end_date: e?.end_date ? e?.end_date : 'N/A',
             id: e?.id ? e?.id : 'N/A',
@@ -108,7 +94,7 @@ const Deals = () => {
             terms_conditions: e?.terms_conditions ? e?.terms_conditions : 'N/A',
             title: e?.title ? e?.title : 'N/A',
             pts_two: e?.pts_two ? e?.pts_two : 'N/A',
-            updatedAt: e?.updatedAt ? e?.updatedAt : 'N/A',
+            updatedAt: e?.updatedAt ? setDateFormat(e?.updatedAt) : 'N/A',
             restaurant_id: e?.restaurant_id ? e?.restaurant_id : 'N/A',
             image: e?.image ? (
               <img src={e?.image} width="70px" height="60px" alt="Img" />
@@ -131,22 +117,6 @@ const Deals = () => {
         console.log('Errors', error);
       });
   };
-
-  useEffect(() => {
-    getDeals();
-    //resto.map((e, i) => {
-    //restoListEmail.push(e.email);
-    //restoList.push(e.restaurant_name);
-    //});
-    //setRestoListEmail([...new Set(restoListEmail)]);
-    //setRestoList([...new Set(restoList)]);
-
-    document.getElementById('page-loader').style.display = 'none';
-
-    var element = document.getElementById('page-container');
-    element.classList.add('show');
-  }, []);
-
   function setDateFormat(e) {
     var d = new Date(e);
     return (
@@ -161,6 +131,29 @@ const Deals = () => {
       )
     );
   }
+  function tConvert(time) {
+    // Check correct time format and split into components
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) {
+      // If time format correct
+      time = time.slice(1); // Remove full string match value
+      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(''); // return adjusted time or original string
+  }
+
+  useEffect(() => {
+    getDeals();
+
+    document.getElementById('page-loader').style.display = 'none';
+
+    var element = document.getElementById('page-container');
+    element.classList.add('show');
+  }, []);
 
   const commentsData = useMemo(() => {
     let computedComments = dealsList;
