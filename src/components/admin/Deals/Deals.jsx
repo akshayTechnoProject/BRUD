@@ -6,8 +6,7 @@ import { Dropdown, Table } from "react-bootstrap";
 import Loader from "../include/Loader";
 import Menu from "../include/Menu";
 import axios from "axios";
-import AddDeals from "./AddDeals";
-import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Deals = () => {
   const [totalItems, setTotalItems] = useState(0);
@@ -200,10 +199,12 @@ const Deals = () => {
       })
         .then((response) => {
           console.log("delete", response);
+          toast.success("Deal deleted successfully.");
           getDeals();
         })
         .catch((error) => {
           console.log("Errors", error);
+          toast.error("Something went wrong.");
         });
     }
   };
@@ -233,7 +234,11 @@ const Deals = () => {
             type="button"
             style={{ borderRadius: "20px" }}
           >
-            <Link to="/addDeals">Add Deals</Link>
+            <NavLink to="/addDeals">
+              <span style={{ color: "#fff", textDecoration: "none" }}>
+                Add Deals
+              </span>
+            </NavLink>
           </button>
           <div
             style={{

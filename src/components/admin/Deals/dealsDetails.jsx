@@ -136,7 +136,7 @@ const DealsDetails = () => {
         <div id="content" className="content">
           <ol className="breadcrumb float-xl-right">
             <li className="breadcrumb-item">
-              <NavLink to="/restaurants">
+              <NavLink to="/deals">
                 <span className="basePath">Deals</span>
               </NavLink>
             </li>

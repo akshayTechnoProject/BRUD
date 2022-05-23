@@ -4,16 +4,16 @@ import Loader from '../include/Loader';
 import Menu from '../include/Menu';
 import Footer from '../include/Footer';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 export default function AddDeals(props) {
-  const [data, setData] = useState(10);
   const [img, setImg] = useState({
     src: '',
     alt: '',
   });
   const [resto, setResto] = useState([]);
   const [getItemList, setGetItemList] = useState();
-  const [getItemListArray, setGetItemListArray] = useState();
   const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
   const [itemName, setItemName] = useState();
@@ -160,7 +160,9 @@ export default function AddDeals(props) {
       }
     }
     setError(error);
+    return isValid;
   };
+  console.log('error::::', error);
 
   const uploadPicture = async (e) => {
     e.preventDefault();
@@ -195,6 +197,7 @@ export default function AddDeals(props) {
           setDisable(false);
           setPicture();
           setAddPicture(false);
+          toast.error('Something went wrong.');
         });
     } else {
       setPicture();
@@ -206,17 +209,41 @@ export default function AddDeals(props) {
 
   const submitHendler = (e) => {
     e.preventDefault();
+    setDisable(true);
+
     if (validate()) {
-      console.log('..', restDataID);
-      console.log('..', itemIDArray.toString());
-      console.log('..', picture);
-      console.log('..', formData.description);
-      console.log('..', endDate);
-      console.log('..', formData.pts_one);
-      console.log('..', formData.short_desc);
-      console.log('..', startDate);
-      console.log('..', formData.title);
-      console.log('..', formData.terms_conditions);
+      const myURL = `http://54.177.165.108:3000/api/admin/add-deals`;
+      var bodyFormData = new URLSearchParams();
+      bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+      bodyFormData.append('restaurant_id', restDataID);
+      bodyFormData.append('item_id', itemIDArray.toString());
+      bodyFormData.append('pts_one', formData.pts_one);
+      bodyFormData.append('title', formData.title);
+      bodyFormData.append('short_desc', formData.short_desc);
+      bodyFormData.append('description', formData.description);
+      bodyFormData.append('terms_conditions', formData.terms_conditions);
+      bodyFormData.append('image', picture);
+      bodyFormData.append('start_date', startDate);
+      bodyFormData.append('end_date', endDate);
+
+      axios({
+        method: 'post',
+        url: myURL,
+        data: bodyFormData,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
+        .then(async (response) => {
+          console.log(response['data']['data']);
+          setDisable(false);
+          toast.success('New deal added successfully.');
+        })
+        .catch((error) => {
+          console.log('Errors', error);
+          setDisable(false);
+          toast.error('Something went wrong.');
+        });
+    } else {
+      setDisable(false);
     }
   };
 
@@ -270,8 +297,8 @@ export default function AddDeals(props) {
                 </div>
               </div>
               <br />
-              <form onSubmit={submitHendler}>
-                <div class="form-group w-75">
+              <form onSubmit={submitHendler} className="addDealsForm">
+                <div class="form-group">
                   <label for="inputState">Restaurant Name:</label>
                   <select
                     id="inputState"
@@ -280,11 +307,15 @@ export default function AddDeals(props) {
                     onChange={(e) => {
                       if (e.target.value != 'Choose Restaurant') {
                         setRestDataID(e.target.value);
+                        setItemIDArray([]);
+                        setChange(!change);
                         selectRestaurant(e);
+                        setItemID('');
                       } else {
                         setRestDataID('');
                         setItemIDArray([]);
                         setItemID('');
+                        setChange(!change);
                       }
                     }}
                   >
@@ -307,7 +338,7 @@ export default function AddDeals(props) {
                   <div className="text-danger">{error.restaurant}</div>
                 </div>
                 {restDataID && getItemList ? (
-                  <div class="form-group w-75">
+                  <div class="form-group">
                     <label for="inputState">Items:</label>
                     <div className="d-flex">
                       <select
@@ -339,6 +370,8 @@ export default function AddDeals(props) {
                           borderRadius: '20px',
                           height: '30px',
                           marginTop: '6px',
+                          backgroundColor: '#f55800',
+                          color: '#fff',
                         }}
                         onClick={(e) => {
                           e.preventDefault();
@@ -362,8 +395,12 @@ export default function AddDeals(props) {
                           {itemIDArray.map((subItems, i) => {
                             return (
                               <button
-                                className="btn btn-primary m-4 placeButton"
-                                style={{ borderRadius: '20px' }}
+                                className="btn m-4 placeButton"
+                                style={{
+                                  borderRadius: '20px',
+                                  backgroundColor: '#f55800',
+                                  color: '#fff',
+                                }}
                                 onClick={(e) => {
                                   e.preventDefault();
                                 }}
@@ -372,6 +409,7 @@ export default function AddDeals(props) {
                                 <span className="placeDeleteIcon">
                                   <i
                                     className="fa fa-trash placeDeleteIcon"
+                                    style={{ marginLeft: '5px' }}
                                     onClick={(e1) => {
                                       e1.preventDefault();
                                       let array = itemIDArray;
@@ -549,8 +587,13 @@ export default function AddDeals(props) {
                 </div>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn m-r-5"
                   disabled={disable}
+                  style={{
+                    borderRadius: '20px',
+                    backgroundColor: '#f55800',
+                    color: '#fff',
+                  }}
                 >
                   {disable ? 'Processing...' : 'Submit'}
                 </button>
