@@ -14,7 +14,7 @@ const DealsDetails = () => {
   const [dealsDetails, setDealsDetails] = useState([]);
   const [restoList, setRestoList] = useState([]);
   const [dealsList, setDealsList] = useState({
-    createdAt: data?.createdAt ? setDateFormat(data.createdAt) : 'N/A',
+    createdAt: data?.createdAt ? setDateFormat(data?.createdAt) : 'N/A',
     description: data?.description ? data?.description : 'N/A',
     end_date: data?.end_date ? data?.end_date : 'N/A',
     id: data?.id ? data?.id : 'N/A',
@@ -27,7 +27,7 @@ const DealsDetails = () => {
     terms_conditions: data?.terms_conditions ? data?.terms_conditions : 'N/A',
     title: data?.title ? data?.title : 'N/A',
     pts_two: data?.pts_two ? data?.pts_two : 'N/A',
-    updatedAt: data?.updatedAt ? data?.updatedAt : 'N/A',
+    updatedAt: data?.updatedAt ? setDateFormat(data?.updatedAt) : 'N/A',
     restaurant_id: data?.restaurant_id ? data?.restaurant_id : 'N/A',
     image: data?.image ? (
       <img src={data?.image} width="70px" height="60px" alt="Img" />
@@ -189,9 +189,9 @@ const DealsDetails = () => {
                   <span className="restaurant_data">{dealsList.pts_one}</span>
                 </div>
                 <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-6 restaurantDetail ">
-                  <span className="restaurant_heading">Pts Two</span>
+                  <span className="restaurant_heading">Updated At</span>
                   <br />
-                  <span className="restaurant_data">{dealsList.pts_two}</span>
+                  <span className="restaurant_data">{dealsList.updatedAt}</span>
                 </div>
                 <br />
               </div>
