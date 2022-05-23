@@ -11,12 +11,8 @@ export default function UpdateDeals() {
   const history = useHistory();
   const location = useLocation();
   var data1 = location.state;
-  // console.log("dattttttt", data1);
-  const [deal, setdeal] = useState({
-    ...data1,
-    start_date: data1.start_date?.split("-").reverse().join("-"),
-    end_date: data1.end_date?.split("-").reverse().join("-"),
-  });
+  console.log("dattttttt", data1);
+  const [deal, setdeal] = useState(data1);
   const [error, setError] = useState({});
 
   const [data, setData] = useState(10);
@@ -335,7 +331,7 @@ export default function UpdateDeals() {
               >
                 <div className="mx-auto ">
                   <span style={{ fontSize: "18px", fontWeight: "700" }}>
-                    {}
+                    {deal.title}
                   </span>
                 </div>
               </div>
