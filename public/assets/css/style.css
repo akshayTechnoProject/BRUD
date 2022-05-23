@@ -294,3 +294,24 @@ input {
 .updateResto .fileInput {
   margin-left: -9px;
 }
+
+/* ================= ADD DEALS ===================== */
+
+.addDealsForm {
+  width: 75%;
+}
+@media (max-width: 767px) {
+  .addDealsForm {
+    width: 100%;
+  }
+}
+.addDealsForm .form-group {
+  margin-bottom: 20px;
+}
+.addDealsForm .form-group label {
+  font-size: 16px;
+  font-weight: 600;
+}
+.addDealsForm .form-group input {
+  margin-top: 0px;
+}

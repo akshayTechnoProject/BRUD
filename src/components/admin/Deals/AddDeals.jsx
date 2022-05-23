@@ -7,14 +7,12 @@ import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export default function AddDeals(props) {
-  const [data, setData] = useState(10);
   const [img, setImg] = useState({
     src: '',
     alt: '',
   });
   const [resto, setResto] = useState([]);
   const [getItemList, setGetItemList] = useState();
-  const [getItemListArray, setGetItemListArray] = useState();
   const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
   const [itemName, setItemName] = useState();
@@ -198,7 +196,7 @@ export default function AddDeals(props) {
           setDisable(false);
           setPicture();
           setAddPicture(false);
-          toast.success('Something went wrong.');
+          toast.error('Something went wrong.');
         });
     } else {
       setPicture();
@@ -237,20 +235,8 @@ export default function AddDeals(props) {
         })
         .catch((error) => {
           console.log('Errors', error);
-          toast.success('Something went wrong.');
+          toast.error('Something went wrong.');
         });
-      //console.log('..', restDataID);
-      //console.log('..', itemIDArray.toString());
-      //console.log('..', picture);
-      //console.log('..', formData.description);
-      //console.log('..', endDate);
-      //console.log('..', formData.pts_one);
-      //console.log('..', formData.short_desc);
-      //console.log('..', startDate);
-      //console.log('..', formData.title);
-      //console.log('..', formData.terms_conditions);
-    } else {
-      toast.success('Something went wrong.');
     }
   };
 
@@ -304,8 +290,8 @@ export default function AddDeals(props) {
                 </div>
               </div>
               <br />
-              <form onSubmit={submitHendler}>
-                <div class="form-group w-75">
+              <form onSubmit={submitHendler} className="addDealsForm">
+                <div class="form-group">
                   <label for="inputState">Restaurant Name:</label>
                   <select
                     id="inputState"
@@ -314,11 +300,15 @@ export default function AddDeals(props) {
                     onChange={(e) => {
                       if (e.target.value != 'Choose Restaurant') {
                         setRestDataID(e.target.value);
+                        setItemIDArray([]);
+                        setChange(!change);
                         selectRestaurant(e);
+                        setItemID('');
                       } else {
                         setRestDataID('');
                         setItemIDArray([]);
                         setItemID('');
+                        setChange(!change);
                       }
                     }}
                   >
@@ -341,7 +331,7 @@ export default function AddDeals(props) {
                   <div className="text-danger">{error.restaurant}</div>
                 </div>
                 {restDataID && getItemList ? (
-                  <div class="form-group w-75">
+                  <div class="form-group">
                     <label for="inputState">Items:</label>
                     <div className="d-flex">
                       <select
@@ -373,6 +363,8 @@ export default function AddDeals(props) {
                           borderRadius: '20px',
                           height: '30px',
                           marginTop: '6px',
+                          backgroundColor: '#f55800',
+                          color: '#fff',
                         }}
                         onClick={(e) => {
                           e.preventDefault();
@@ -396,8 +388,12 @@ export default function AddDeals(props) {
                           {itemIDArray.map((subItems, i) => {
                             return (
                               <button
-                                className="btn btn-primary m-4 placeButton"
-                                style={{ borderRadius: '20px' }}
+                                className="btn m-4 placeButton"
+                                style={{
+                                  borderRadius: '20px',
+                                  backgroundColor: '#f55800',
+                                  color: '#fff',
+                                }}
                                 onClick={(e) => {
                                   e.preventDefault();
                                 }}
@@ -406,6 +402,7 @@ export default function AddDeals(props) {
                                 <span className="placeDeleteIcon">
                                   <i
                                     className="fa fa-trash placeDeleteIcon"
+                                    style={{ marginLeft: '5px' }}
                                     onClick={(e1) => {
                                       e1.preventDefault();
                                       let array = itemIDArray;
