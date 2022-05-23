@@ -324,8 +324,7 @@ export default function AddDeals(props) {
                       ) {
                         return (
                           <option value={e?.id}>
-                            {e?.restaurant_name} &nbsp; → &nbsp;
-                            {e?.email ? e?.email : 'N/A'}
+                            {e?.restaurant_name} &nbsp;
                           </option>
                         );
                       }
