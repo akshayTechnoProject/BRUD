@@ -228,9 +228,9 @@ function Menu() {
                 activeClassName="active"
               >
                 <div className="menuItemDiv">
-                  {/* <i class="fa fa-shopping-cart menuIcon"></i> */}
-                  <i class="fa fa-handshake-simple"></i>
-                  <span className="menuItem">Deals</span>
+                  {/* <i class="fa fa-handshake menuIcon"></i> */}
+                  <i class="fa fa-tags menuIcon"></i>
+                  <span className="menuItem ">Deals</span>
                 </div>
               </NavLink>
             </li>

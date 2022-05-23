@@ -5,6 +5,7 @@ import Menu from '../include/Menu';
 import Footer from '../include/Footer';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 export default function AddDeals(props) {
   const [img, setImg] = useState({
@@ -208,6 +209,8 @@ export default function AddDeals(props) {
 
   const submitHendler = (e) => {
     e.preventDefault();
+    setDisable(true);
+
     if (validate()) {
       const myURL = `http://54.177.165.108:3000/api/admin/add-deals`;
       var bodyFormData = new URLSearchParams();
@@ -231,12 +234,16 @@ export default function AddDeals(props) {
       })
         .then(async (response) => {
           console.log(response['data']['data']);
+          setDisable(false);
           toast.success('New deal added successfully.');
         })
         .catch((error) => {
           console.log('Errors', error);
+          setDisable(false);
           toast.error('Something went wrong.');
         });
+    } else {
+      setDisable(false);
     }
   };
 

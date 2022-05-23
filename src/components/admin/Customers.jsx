@@ -164,9 +164,11 @@ const Customers = () => {
         <div id="content" className="content">
           <ol className="breadcrumb float-xl-right">
             <li className="breadcrumb-item">
-              <NavLink to="/dashboard">Dashboard</NavLink>
+              <NavLink to="/dashboard">
+                <span className="basePath">Dashboard</span>
+              </NavLink>
             </li>
-            <li className="breadcrumb-item active">Customers</li>
+            <li className="breadcrumb-item active currentPath">Customers</li>
           </ol>
           <h1 className="page-header">Customers</h1>
 
