@@ -34,11 +34,6 @@ const Deals = () => {
       sortable: false,
     },
     {
-      name: 'Restaurant Name',
-      field: 'restaurant_name',
-      sortable: false,
-    },
-    {
       name: 'Start Date',
       field: 'start_date',
       sortable: false,
@@ -115,7 +110,7 @@ const Deals = () => {
             ),
           };
           if (e?.restaurant_id) {
-            e = { ...e, restName: restoName(e?.restaurant_id) };
+            e = { ...e, restName: e?.restaurant_id };
           } else {
             e = { ...e, restName: 'N/A' };
           }
@@ -133,6 +128,7 @@ const Deals = () => {
         console.log('Errors', error);
       });
   };
+  /*
   const getResto = () => {
     const myurl = 'http://54.177.165.108:3000/api/admin/deals-restaurants-list';
     var bodyFormData = new URLSearchParams();
@@ -156,32 +152,15 @@ const Deals = () => {
             id: e?.id ? e?.id : 'N/A',
             restaurant_name: e?.restaurant_name ? e?.restaurant_name : 'N/A',
           };
-          //console.log('::::::::::::', e);
           return e;
         });
-        // console.log('::::::::::::', restData);
-
         setRestoList(restData);
-        //setRestoList(response['data']['data']);
       })
       .catch((error) => {
         console.log('Errors 000000', error);
       });
   };
-  //console.log('///////', restoList);
-  restoList.map((e, i) => {
-    console.log('kk');
-  });
-  const restoName = (id) => {
-    restoList.map((e, i) => {
-      console.log('hall', e);
-      if (id == e?.id) {
-        console.log('hall', e?.id);
-        //return e?.restaurant_name;
-      }
-    });
-  };
-
+*/
   function setDateFormat(e) {
     var d = new Date(e);
     return (
@@ -213,7 +192,7 @@ const Deals = () => {
 
   useEffect(() => {
     async function fetchData() {
-      await getResto();
+      //await getResto();
       await getDeals();
     }
     fetchData();
@@ -427,7 +406,6 @@ const Deals = () => {
                               <td>{e?.sr_no}</td>
                               <td>{e?.image}</td>
                               <td>{e?.title ? e?.title : 'N/A'}</td>
-                              <td>{e?.restName}</td>
                               <td>{e?.start_date}</td>
                               <td>{e?.end_date}</td>
 
