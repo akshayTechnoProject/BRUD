@@ -21,6 +21,8 @@ export default function AddDeals(props) {
   const [itemIDArray, setItemIDArray] = useState([]);
   const [itemNameArray, setItemNameArray] = useState([]);
   const [restDataID, setRestDataID] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [error, setError] = useState({});
   const [disable, setDisable] = useState(false);
   const [addPicture, setAddPicture] = useState(false);
@@ -149,7 +151,12 @@ export default function AddDeals(props) {
         var date = formData.end_date;
         var array = date.split('-');
         var reverseArray = array.reverse();
-        formData.end_date = reverseArray.join('-');
+        setEndDate(reverseArray.join('-'));
+        console.log('-----', formData);
+        date = formData.start_date;
+        array = date.split('-');
+        reverseArray = array.reverse();
+        setStartDate(reverseArray.join('-'));
       }
     }
     setError(error);
@@ -199,14 +206,23 @@ export default function AddDeals(props) {
 
   const submitHendler = (e) => {
     e.preventDefault();
-
-    validate();
+    if (validate()) {
+      console.log('..', restDataID);
+      console.log('..', itemIDArray.toString());
+      console.log('..', picture);
+      console.log('..', formData.description);
+      console.log('..', endDate);
+      console.log('..', formData.pts_one);
+      console.log('..', formData.short_desc);
+      console.log('..', startDate);
+      console.log('..', formData.title);
+      console.log('..', formData.terms_conditions);
+    }
   };
 
   console.log('Item Array:', itemIDArray.toString());
   console.log('Item Name:', itemName);
   console.log('>>>>>:', formData);
-  console.log('aaaaaa', formData.end_date > formData.start_date);
 
   return (
     <>
@@ -238,7 +254,7 @@ export default function AddDeals(props) {
                 marginRight: '10px',
               }}
             ></i>
-            <h1 className="page-header">Add Restaurant Dealss</h1>
+            <h1 className="page-header">Add Restaurant Deals</h1>
           </div>
 
           <div className="card mainBody">
