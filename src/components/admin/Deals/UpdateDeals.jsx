@@ -11,8 +11,12 @@ export default function UpdateDeals() {
   const history = useHistory();
   const location = useLocation();
   var data1 = location.state;
-  console.log("dattttttt", data1);
-  const [deal, setdeal] = useState(data1);
+  // console.log("dattttttt", data1);
+  const [deal, setdeal] = useState({
+    ...data1,
+    start_date: data1.start_date?.split("-").reverse().join("-"),
+    end_date: data1.end_date?.split("-").reverse().join("-"),
+  });
   const [error, setError] = useState({});
 
   const [data, setData] = useState(10);
@@ -25,7 +29,6 @@ export default function UpdateDeals() {
   const [getItemListArray, setGetItemListArray] = useState();
   const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
-  const [itemName, setItemName] = useState();
   const [change, setChange] = useState(false);
   const [itemIDArray, setItemIDArray] = useState([]);
   const [itemNameArray, setItemNameArray] = useState([]);
@@ -60,9 +63,16 @@ export default function UpdateDeals() {
         for (let index = 0; index < response["data"]["data"]?.length; index++) {
           resto.push(response["data"]["data"][index]);
           restoList.push(response["data"]["data"][index].restaurant_name);
-          setResto([...new Set(resto)]);
-          setRestoList([...new Set(restoList)]);
+
+          // console.log(restoList);
         }
+        setResto([...new Set(resto)]);
+        setRestoList([...new Set(restoList)]);
+        let ktemp = resto.filter((e, i) => e.id == data1.restaurant_id);
+        setdeal({
+          ...deal,
+          restaurant_name: [...new Set(ktemp)][0].restaurant_name,
+        });
       })
       .catch((error) => {
         console.log("Errors", error);
@@ -71,6 +81,32 @@ export default function UpdateDeals() {
 
   useEffect(() => {
     getRestoList();
+    const myURL =
+      "http://54.177.165.108:3000/api/admin/deals-restaurants-items-list";
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
+    bodyFormData.append("restaurant_id", data1.restaurant_id);
+
+    axios({
+      method: "post",
+      url: myURL,
+      data: bodyFormData,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    })
+      .then(async (response) => {
+        console.log("getItemList", response["data"]["data"]);
+        setGetItemList(response["data"]["data"]);
+        let ktemp = response["data"]["data"].filter(
+          (e, i) => e.id == data1.item_id
+        );
+        setdeal({
+          ...deal,
+          item_name: [...new Set(ktemp)][0].item_name,
+        });
+      })
+      .catch((error) => {
+        console.log("Errors", error);
+      });
     document.getElementById("page-loader").style.display = "none";
 
     var element = document.getElementById("page-container");
@@ -102,17 +138,16 @@ export default function UpdateDeals() {
         console.log("Errors", error);
       });
   };
-
   const validate = () => {
     let isValid = true;
     let input = deal;
     let error = {};
 
-    if (!restDataID) {
+    if (!deal.restaurant_id) {
       isValid = false;
       error["restaurant"] = "Please select restaurant";
     }
-    if (itemIDArray.length == 0) {
+    if (!deal.item_id) {
       isValid = false;
       error["restItems"] = "Please select restaurant item";
     }
@@ -149,22 +184,24 @@ export default function UpdateDeals() {
       error["end_date"] = "Please select end date";
     }
     if (input["start_date"].trim() && input["end_date"].trim()) {
-      if (formData.end_date < formData.start_date) {
+      if (deal.end_date < deal.start_date) {
         isValid = false;
+
         error["end_date"] = "End date should be greater than the start date";
       } else {
-        var date = formData.end_date;
+        var date = deal.end_date;
         var array = date.split("-");
         var reverseArray = array.reverse();
         setEndDate(reverseArray.join("-"));
-        console.log("-----", formData);
-        date = formData.start_date;
+        console.log("-----", deal);
+        date = deal.start_date;
         array = date.split("-");
         reverseArray = array.reverse();
         setStartDate(reverseArray.join("-"));
       }
     }
     setError(error);
+    return isValid;
   };
 
   const uploadPicture = async (e) => {
@@ -191,7 +228,11 @@ export default function UpdateDeals() {
       })
         .then((result) => {
           console.log("Success:=====", result);
-          setdeal({ ...deal, image: result?.data?.data?.url });
+          setdeal({
+            ...deal,
+            image: result?.data?.data?.url,
+            img: result?.data?.data?.filepath_url,
+          });
           setDisable(false);
           //getBanners();
         })
@@ -214,7 +255,7 @@ export default function UpdateDeals() {
     setDisable(true);
 
     if (validate()) {
-      const myurl = "http://54.177.165.108:3000/api/admin/deals";
+      const myurl = "http://54.177.165.108:3000/api/admin/update-deals";
       var bodyFormData = new URLSearchParams();
       bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
       bodyFormData.append("deals_id", deal.id);
@@ -225,7 +266,7 @@ export default function UpdateDeals() {
       bodyFormData.append("short_desc", deal.short_desc);
       bodyFormData.append("description", deal.description);
       bodyFormData.append("terms_conditions", deal.terms_conditions);
-      bodyFormData.append("image", deal.image);
+      bodyFormData.append("image", deal.img);
       bodyFormData.append("start_date", deal.start_date);
       bodyFormData.append("end_date", deal.end_date);
 
@@ -247,7 +288,6 @@ export default function UpdateDeals() {
           setDisable(false);
         });
     } else {
-      console.log(error);
       setDisable(false);
     }
   };
@@ -255,7 +295,7 @@ export default function UpdateDeals() {
   return (
     <>
       <Loader />
-
+      {console.log(deal)}
       <div
         id="page-container"
         className="fade page-sidebar-fixed page-header-fixed"
@@ -312,6 +352,8 @@ export default function UpdateDeals() {
                       onChange={(e) => {
                         if (e.target.value != "Choose Restaurant") {
                           setRestDataID(e.target.value);
+                          setdeal({ ...deal, restaurant_id: e.target.value });
+
                           selectRestaurant(e);
                           console.log(e.target.value);
                         } else {
@@ -321,7 +363,9 @@ export default function UpdateDeals() {
                         }
                       }}
                     >
-                      <option selected>Choose Restaurant</option>
+                      <option value={deal.restaurant_id}>
+                        {deal.restaurant_name}
+                      </option>
                       {resto.map((e, i) => {
                         if (
                           e?.restaurant_name != "" &&
@@ -339,7 +383,7 @@ export default function UpdateDeals() {
                     </select>
                     <div className="text-danger">{error.restaurant}</div>
                   </div>
-                  {restDataID && getItemList ? (
+                  {deal.restaurant_id && getItemList ? (
                     <div class="form-group w-75">
                       <label for="inputState">Items:</label>
                       <div className="d-flex">
@@ -350,12 +394,13 @@ export default function UpdateDeals() {
                           onChange={(e) => {
                             if (e.target.value != "Choose Items") {
                               setItemID(e.target.value);
+                              setdeal({ ...deal, item_id: e.target.value });
                             } else {
                               setItemID("");
                             }
                           }}
                         >
-                          <option selected>Choose Items</option>
+                          <option value={deal.item_id}>{deal.item_name}</option>
                           {getItemList.map((e, i) => {
                             return (
                               <option value={e?.id} name={e?.item_name}>
@@ -560,13 +605,13 @@ export default function UpdateDeals() {
                       placeholder="DD-MM-YYYY"
                       style={{ borderRadius: "20px" }}
                       name="start_date"
-                      value={deal.start_date.split("-").reverse().join("-")}
-                      onChange={(e) =>
+                      value={deal.start_date}
+                      onChange={(e) => {
                         setdeal({
                           ...deal,
                           start_date: e.target.value,
-                        })
-                      }
+                        });
+                      }}
                     />
                     <div className="text-danger">{error.start_date}</div>
                   </div>
@@ -579,7 +624,7 @@ export default function UpdateDeals() {
                       placeholder="DD-MM-YYYY"
                       style={{ borderRadius: "20px" }}
                       name="end_date"
-                      value={deal.end_date.split("-").reverse().join("-")}
+                      value={deal.end_date}
                       onChange={(e) => {
                         setdeal({
                           ...deal,
