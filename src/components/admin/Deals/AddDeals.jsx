@@ -9,9 +9,14 @@ export default function AddDeals(props) {
   const [data, setData] = useState(10);
 
   const [resto, setResto] = useState([]);
+  const [getItemList, setGetItemList] = useState();
   const [restoList, setRestoList] = useState([]);
-  const [restData, setRestData] = useState({});
-  const [restoListEmail, setRestoListEmail] = useState([]);
+  const [itemID, setItemID] = useState();
+  const [itemName, setItemName] = useState();
+  const [change, setChange] = useState(false);
+  const [itemIDArray, setItemIDArray] = useState([]);
+  const [itemNameArray, setItemNameArray] = useState([]);
+  const [restDataID, setRestDataID] = useState();
 
   const getRestoList = () => {
     const myURL = 'http://54.177.165.108:3000/api/admin/deals-restaurants-list';
@@ -46,7 +51,39 @@ export default function AddDeals(props) {
 
     var element = document.getElementById('page-container');
     element.classList.add('show');
-  }, []);
+  }, [change]);
+
+  const selectRestaurant = async (e) => {
+    console.log('::::', e.target.value);
+    await getItem(e.target.value);
+  };
+  const getItem = (id) => {
+    const myURL =
+      'http://54.177.165.108:3000/api/admin/deals-restaurants-items-list';
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+    bodyFormData.append('restaurant_id', id);
+
+    axios({
+      method: 'post',
+      url: myURL,
+      data: bodyFormData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+      .then(async (response) => {
+        console.log('getItemList', response['data']['data']);
+        setGetItemList(response['data']['data']);
+      })
+      .catch((error) => {
+        console.log('Errors', error);
+      });
+  };
+  const selectItem = (e) => {
+    console.log('Item Id:', e.target.value);
+    setItemID(e.target.value);
+  };
+
+  console.log('Item Array:', itemIDArray);
 
   return (
     <>
@@ -95,26 +132,15 @@ export default function AddDeals(props) {
               </div>
               <br />
               <form>
-                <div className="form-group">
-                  <label for="exampleInputEmail1">Restaurant Name:</label>
-                  <input
-                    type="email"
-                    className="form-control ml-0"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="Restaurant name"
-                    style={{ borderRadius: '20px' }}
-                  />
-                </div>
-                <div class="form-group w-50">
+                <div class="form-group w-75">
                   <label for="inputState">Restaurant Name:</label>
                   <select
                     id="inputState"
                     class="form-control ml-0"
                     style={{ borderRadius: '20px' }}
                     onChange={(e) => {
-                      setRestData(e.target.value);
-                      console.log('::::', e.target.value);
+                      setRestDataID(e.target.value);
+                      selectRestaurant(e);
                     }}
                   >
                     <option selected>Choose Restaurant</option>
@@ -125,7 +151,7 @@ export default function AddDeals(props) {
                         e?.restaurant_name != 'N/A'
                       ) {
                         return (
-                          <option value={(e?.id, e?.restaurant_name, e?.email)}>
+                          <option value={e?.id}>
                             {e?.restaurant_name} : {e?.email}
                           </option>
                         );
@@ -133,16 +159,84 @@ export default function AddDeals(props) {
                     })}
                   </select>
                 </div>
-                <div className="form-group">
-                  <label for="exampleInputPassword1">Items:</label>
-                  <input
-                    type="password"
-                    className="form-control ml-0"
-                    id="exampleInputPassword1"
-                    placeholder="items"
-                    style={{ borderRadius: '20px' }}
-                  />
-                </div>
+                {restDataID && getItemList ? (
+                  <div class="form-group w-75">
+                    <label for="inputState">Items:</label>
+                    <div className="d-flex">
+                      <select
+                        id="inputState"
+                        class="form-control ml-0"
+                        style={{ borderRadius: '20px' }}
+                        onChange={selectItem}
+                      >
+                        <option selected>Choose Items</option>
+                        {getItemList.map((e, i) => {
+                          return (
+                            <option value={e?.id} name={e?.item_name}>
+                              {e?.item_name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <button
+                        className="btn btn-sm btn-primary ml-2"
+                        style={{
+                          borderRadius: '20px',
+                          height: '30px',
+                          marginTop: '6px',
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (itemID)
+                            setItemIDArray([
+                              ...new Set([...itemIDArray, itemID]),
+                            ]);
+                          setItemNameArray([
+                            ...new Set([...itemNameArray, itemID]),
+                          ]);
+                          setItemID('');
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                    <div className="topDestinationsDiv row">
+                      {itemIDArray.length !== 0 ? (
+                        <div className="row ml-2 mt-2">
+                          {itemIDArray.map((subItems, i) => {
+                            return (
+                              <button
+                                className="btn btn-primary m-4 placeButton"
+                                style={{ borderRadius: '20px' }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                }}
+                              >
+                                {subItems}
+                                <span className="placeDeleteIcon">
+                                  <i
+                                    className="fa fa-trash placeDeleteIcon"
+                                    onClick={(e1) => {
+                                      e1.preventDefault();
+                                      let array = itemIDArray;
+                                      let index = i;
+
+                                      if (index !== -1) {
+                                        array.splice(index, 1);
+                                        setItemIDArray(array);
+                                        setChange(!change);
+                                      }
+                                    }}
+                                  ></i>
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
                 <div className="form-group">
                   <label for="exampleInputPassword1">Title:</label>
                   <input
