@@ -7,16 +7,33 @@ import { NavLink, useHistory, useLocation } from 'react-router-dom';
 
 export default function AddDeals(props) {
   const [data, setData] = useState(10);
-
+  const [img, setImg] = useState({
+    src: '',
+    alt: '',
+  });
   const [resto, setResto] = useState([]);
   const [getItemList, setGetItemList] = useState();
+  const [getItemListArray, setGetItemListArray] = useState();
   const [restoList, setRestoList] = useState([]);
-  const [itemID, setItemID] = useState();
+  const [itemID, setItemID] = useState({});
   const [itemName, setItemName] = useState();
   const [change, setChange] = useState(false);
   const [itemIDArray, setItemIDArray] = useState([]);
   const [itemNameArray, setItemNameArray] = useState([]);
   const [restDataID, setRestDataID] = useState();
+  const [error, setError] = useState({});
+  const [disable, setDisable] = useState(false);
+  const [addPicture, setAddPicture] = useState(false);
+  const [picture, setPicture] = useState({});
+  const [formData, setFormData] = useState({
+    title: '',
+    pts_one: '',
+    short_desc: '',
+    description: '',
+    terms_conditions: '',
+    start_date: '',
+    end_date: '',
+  });
 
   const getRestoList = () => {
     const myURL = 'http://54.177.165.108:3000/api/admin/deals-restaurants-list';
@@ -78,12 +95,118 @@ export default function AddDeals(props) {
         console.log('Errors', error);
       });
   };
-  const selectItem = (e) => {
-    console.log('Item Id:', e.target.value);
-    setItemID(e.target.value);
+
+  const validate = () => {
+    let isValid = true;
+    let input = formData;
+    let error = {};
+
+    if (!restDataID) {
+      isValid = false;
+      error['restaurant'] = 'Please select restaurant';
+    }
+    if (itemIDArray.length == 0) {
+      isValid = false;
+      error['restItems'] = 'Please select restaurant item';
+    }
+    if (!addPicture) {
+      isValid = false;
+      error['image'] = 'Please select image';
+    }
+    if (!input['pts_one'].trim()) {
+      isValid = false;
+      error['pts_one'] = 'Please enter pts one';
+    }
+    if (!input['title'].trim()) {
+      isValid = false;
+      error['title'] = 'Please enter title';
+    }
+    if (!input['short_desc'].trim()) {
+      isValid = false;
+      error['short_desc'] = 'Please enter short description';
+    }
+    if (!input['description'].trim()) {
+      isValid = false;
+      error['description'] = 'Please enter description';
+    }
+    if (!input['terms_conditions'].trim()) {
+      isValid = false;
+      error['terms_conditions'] = 'Please enter terms condition';
+    }
+    if (!input['start_date'].trim()) {
+      isValid = false;
+      error['start_date'] = 'Please select start date';
+    }
+    if (!input['end_date'].trim()) {
+      isValid = false;
+      error['end_date'] = 'Please select end date';
+    }
+    if (input['start_date'].trim() && input['end_date'].trim()) {
+      if (formData.end_date < formData.start_date) {
+        isValid = false;
+        error['end_date'] = 'End date should be greater than the start date';
+      } else {
+        var date = formData.end_date;
+        var array = date.split('-');
+        var reverseArray = array.reverse();
+        formData.end_date = reverseArray.join('-');
+      }
+    }
+    setError(error);
   };
 
-  console.log('Item Array:', itemIDArray);
+  const uploadPicture = async (e) => {
+    e.preventDefault();
+    if (e.target.files[0]) {
+      setImg({
+        src: URL.createObjectURL(e.target.files[0]),
+        alt: e.target.files[0].name,
+      });
+
+      setDisable(true);
+      setPicture(e.target.files[0]);
+      setAddPicture(true);
+      console.log('PHOTO===>', e?.target?.files[0]);
+
+      const myurl = `http://54.177.165.108:3000/api/admin/upload-img`;
+      var bodyFormData = new FormData();
+      bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+      bodyFormData.append('image', e?.target?.files[0]);
+      axios({
+        method: 'post',
+        url: myurl,
+        data: bodyFormData,
+      })
+        .then((result) => {
+          console.log('Success:=====', result);
+          setPicture(result?.data?.data?.filepath_url);
+          setDisable(false);
+          //getBanners();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          setDisable(false);
+          setPicture();
+          setAddPicture(false);
+        });
+    } else {
+      setPicture();
+      setAddPicture(false);
+      setDisable(false);
+      setImg({ src: '', alt: '' });
+    }
+  };
+
+  const submitHendler = (e) => {
+    e.preventDefault();
+
+    validate();
+  };
+
+  console.log('Item Array:', itemIDArray.toString());
+  console.log('Item Name:', itemName);
+  console.log('>>>>>:', formData);
+  console.log('aaaaaa', formData.end_date > formData.start_date);
 
   return (
     <>
@@ -115,7 +238,7 @@ export default function AddDeals(props) {
                 marginRight: '10px',
               }}
             ></i>
-            <h1 className="page-header">Update Restaurant Detail</h1>
+            <h1 className="page-header">Add Restaurant Dealss</h1>
           </div>
 
           <div className="card mainBody">
@@ -131,7 +254,7 @@ export default function AddDeals(props) {
                 </div>
               </div>
               <br />
-              <form>
+              <form onSubmit={submitHendler}>
                 <div class="form-group w-75">
                   <label for="inputState">Restaurant Name:</label>
                   <select
@@ -139,8 +262,14 @@ export default function AddDeals(props) {
                     class="form-control ml-0"
                     style={{ borderRadius: '20px' }}
                     onChange={(e) => {
-                      setRestDataID(e.target.value);
-                      selectRestaurant(e);
+                      if (e.target.value != 'Choose Restaurant') {
+                        setRestDataID(e.target.value);
+                        selectRestaurant(e);
+                      } else {
+                        setRestDataID('');
+                        setItemIDArray([]);
+                        setItemID('');
+                      }
                     }}
                   >
                     <option selected>Choose Restaurant</option>
@@ -152,12 +281,14 @@ export default function AddDeals(props) {
                       ) {
                         return (
                           <option value={e?.id}>
-                            {e?.restaurant_name} : {e?.email}
+                            {e?.restaurant_name} &nbsp; → &nbsp;
+                            {e?.email ? e?.email : 'N/A'}
                           </option>
                         );
                       }
                     })}
                   </select>
+                  <div className="text-danger">{error.restaurant}</div>
                 </div>
                 {restDataID && getItemList ? (
                   <div class="form-group w-75">
@@ -167,13 +298,21 @@ export default function AddDeals(props) {
                         id="inputState"
                         class="form-control ml-0"
                         style={{ borderRadius: '20px' }}
-                        onChange={selectItem}
+                        onChange={(e) => {
+                          if (e.target.value != 'Choose Items') {
+                            setItemID(e.target.value);
+                          } else {
+                            setItemID('');
+                          }
+                        }}
                       >
                         <option selected>Choose Items</option>
                         {getItemList.map((e, i) => {
                           return (
                             <option value={e?.id} name={e?.item_name}>
-                              {e?.item_name}
+                              {e?.category_type} &nbsp; → &nbsp;
+                              {e?.item_name} &nbsp; → &nbsp; price:{' '}
+                              {e?.price?.replace('$', '')}
                             </option>
                           );
                         })}
@@ -200,6 +339,7 @@ export default function AddDeals(props) {
                         Add
                       </button>
                     </div>
+                    <div className="text-danger">{error.restItems}</div>
                     <div className="topDestinationsDiv row">
                       {itemIDArray.length !== 0 ? (
                         <div className="row ml-2 mt-2">
@@ -240,32 +380,59 @@ export default function AddDeals(props) {
                 <div className="form-group">
                   <label for="exampleInputPassword1">Title:</label>
                   <input
-                    type="password"
+                    type="text"
                     className="form-control ml-0"
                     id="exampleInputPassword1"
                     placeholder="title"
                     style={{ borderRadius: '20px' }}
+                    name="title"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        title: e.target.value,
+                      })
+                    }
                   />
+                  <div className="text-danger">{error.title}</div>
                 </div>
                 <div className="form-group">
                   <label for="exampleInputPassword1">PTS One:</label>
                   <input
-                    type="password"
+                    type="number"
                     className="form-control ml-0"
                     id="exampleInputPassword1"
                     placeholder="pts one"
                     style={{ borderRadius: '20px' }}
+                    name="pts_one"
+                    value={formData.pts_one}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pts_one: e.target.value,
+                      })
+                    }
                   />
+                  <div className="text-danger">{error.pts_one}</div>
                 </div>
                 <div className="form-group">
                   <label for="exampleInputPassword1">Short Description:</label>
                   <input
-                    type="password"
+                    type="text"
                     className="form-control ml-0"
                     id="exampleInputPassword1"
                     placeholder="short description"
                     style={{ borderRadius: '20px' }}
+                    name="short_desc"
+                    value={formData.short_desc}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        short_desc: e.target.value,
+                      })
+                    }
                   />
+                  <div className="text-danger">{error.short_desc}</div>
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlTextarea1">Description:</label>
@@ -274,17 +441,35 @@ export default function AddDeals(props) {
                     id="exampleFormControlTextarea1"
                     rows="3"
                     style={{ borderRadius: '20px' }}
+                    name="description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        description: e.target.value,
+                      })
+                    }
                   ></textarea>
+                  <div className="text-danger">{error.description}</div>
                 </div>
                 <div className="form-group">
                   <label for="exampleInputPassword1">Terms Conditions:</label>
                   <input
-                    type="password"
+                    type="text"
                     className="form-control ml-0"
                     id="exampleInputPassword1"
                     placeholder="terms conditions"
                     style={{ borderRadius: '20px' }}
+                    name="terms_conditions"
+                    value={formData.terms_conditions}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        terms_conditions: e.target.value,
+                      })
+                    }
                   />
+                  <div className="text-danger">{error.terms_conditions}</div>
                 </div>
                 <div className="form-group">
                   <label for="exampleInputPassword1">Image:</label>
@@ -292,32 +477,66 @@ export default function AddDeals(props) {
                   <input
                     type="file"
                     name="image"
-                    //onChange={uploadPicture}
+                    onChange={uploadPicture}
                     style={{ marginLeft: '-10px' }}
                   />
+                  <br />
+                  {img.src != '' ? (
+                    <img
+                      src={img.src}
+                      className="form-img__img-preview"
+                      style={{ width: '84px', height: '84px' }}
+                      alt="imgs"
+                    />
+                  ) : (
+                    ''
+                  )}
+                  <div className="text-danger">{error.image}</div>
                 </div>
                 <div className="form-group">
                   <label for="exampleInputPassword1">Start Date:</label>
                   <input
-                    type="password"
+                    type="date"
                     className="form-control ml-0"
-                    id="exampleInputPassword1"
-                    placeholder="start date"
+                    id="date"
+                    placeholder="DD-MM-YYYY"
                     style={{ borderRadius: '20px' }}
+                    name="start_date"
+                    value={formData.start_date}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        start_date: e.target.value,
+                      })
+                    }
                   />
+                  <div className="text-danger">{error.start_date}</div>
                 </div>
                 <div className="form-group">
                   <label for="exampleInputPassword1">End Date:</label>
                   <input
-                    type="password"
+                    type="date"
                     className="form-control ml-0"
-                    id="exampleInputPassword1"
-                    placeholder="end date"
+                    id="date"
+                    placeholder="DD-MM-YYYY"
                     style={{ borderRadius: '20px' }}
+                    name="end_date"
+                    value={formData.end_date}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        end_date: e.target.value,
+                      });
+                    }}
                   />
+                  <div className="text-danger">{error.end_date}</div>
                 </div>
-                <button type="submit" className="btn btn-primary">
-                  Submit
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={disable}
+                >
+                  {disable ? 'Processing...' : 'Submit'}
                 </button>
               </form>
             </div>
