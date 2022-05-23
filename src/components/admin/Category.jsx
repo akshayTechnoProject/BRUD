@@ -164,15 +164,26 @@ export default function Category() {
             }
           }}
         >
-          <h3>Add Category</h3>
-          <input
-            type="text"
-            onChange={(e) => {
-              temp = e.target.value;
-            }}
-            className="w-25 form-control ml-0"
-            style={{ borderRadius: '20px' }}
-          />
+          <div className="form-group">
+            <label
+              for="exampleInputPassword1"
+              style={{ fontSize: '16px', fontWeight: '600' }}
+            >
+              Add Category:
+            </label>
+            <input
+              type="text"
+              onChange={(e) => {
+                temp = e.target.value;
+              }}
+              placeholder="Add category"
+              className="w-25 form-control ml-0"
+              style={{ borderRadius: '20px' }}
+            />
+            {visibleMessage ? (
+              <div className="text-danger ml-0">Please fill the input</div>
+            ) : null}
+          </div>
           <input
             type="submit"
             className="btn btn-success ml-0"
@@ -180,9 +191,6 @@ export default function Category() {
             value={!addLoad ? 'Submit' : 'Processing...'}
             style={{ borderRadius: '20px' }}
           ></input>
-          {visibleMessage ? (
-            <div className="text-danger ml-0">*Please fill the input</div>
-          ) : null}
         </form>
       </>
     );
@@ -208,21 +216,26 @@ export default function Category() {
             }
           }}
         >
-          <h3>Edit Category</h3>
-
-          <input
-            type="text"
-            defaultValue={catName}
-            onChange={(e) => (temp1 = e.target.value)}
-            className="w-25  form-control ml-0"
-            style={{ borderRadius: '20px' }}
-          />
-          {visibleEditMessage ? (
-            <div className="text-danger ml-2">
-              *Please fill the input properly
-            </div>
-          ) : null}
-
+          <div className="form-group">
+            <label
+              for="exampleInputPassword1"
+              style={{ fontSize: '16px', fontWeight: '600' }}
+            >
+              Edit Category:
+            </label>
+            <input
+              type="text"
+              className="form-control ml-0 w-25"
+              defaultValue={catName}
+              onChange={(e) => (temp1 = e.target.value)}
+              style={{ borderRadius: '20px' }}
+            />
+            {visibleEditMessage ? (
+              <div className="text-danger ml-2">
+                Please fill the input properly
+              </div>
+            ) : null}
+          </div>
           <input
             type="submit"
             className="btn btn-success ml-0"
@@ -230,11 +243,6 @@ export default function Category() {
             disabled={addLoad}
             style={{ borderRadius: '20px' }}
           ></input>
-          {visibleEditMessage ? (
-            <div className="text-danger ml-0">
-              *Please fill the input properly
-            </div>
-          ) : null}
         </form>
       </>
     );
@@ -328,7 +336,7 @@ export default function Category() {
               style={{ borderRadius: '20px' }}
             >
               <div
-                className="card card-body addCategory"
+                className="card card-body addCategory mb-3"
                 style={{ borderRadius: '20px' }}
               >
                 {visible ? <UpdateCatView /> : <AddCat />}

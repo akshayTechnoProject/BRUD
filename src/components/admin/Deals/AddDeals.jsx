@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 
 export default function AddDeals(props) {
+  const history = useHistory();
   const [img, setImg] = useState({
     src: '',
     alt: '',
@@ -147,16 +148,6 @@ export default function AddDeals(props) {
       if (formData.end_date < formData.start_date) {
         isValid = false;
         error['end_date'] = 'End date should be greater than the start date';
-      } else {
-        var date = formData.end_date;
-        var array = date.split('-');
-        var reverseArray = array.reverse();
-        setEndDate(reverseArray.join('-'));
-        console.log('-----', formData);
-        date = formData.start_date;
-        array = date.split('-');
-        reverseArray = array.reverse();
-        setStartDate(reverseArray.join('-'));
       }
     }
     setError(error);
@@ -171,12 +162,10 @@ export default function AddDeals(props) {
         src: URL.createObjectURL(e.target.files[0]),
         alt: e.target.files[0].name,
       });
-
       setDisable(true);
       setPicture(e.target.files[0]);
       setAddPicture(true);
       console.log('PHOTO===>', e?.target?.files[0]);
-
       const myurl = `http://54.177.165.108:3000/api/admin/upload-img`;
       var bodyFormData = new FormData();
       bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
@@ -190,7 +179,6 @@ export default function AddDeals(props) {
           console.log('Success:=====', result);
           setPicture(result?.data?.data?.filepath_url);
           setDisable(false);
-          //getBanners();
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -223,8 +211,14 @@ export default function AddDeals(props) {
       bodyFormData.append('description', formData.description);
       bodyFormData.append('terms_conditions', formData.terms_conditions);
       bodyFormData.append('image', picture);
-      bodyFormData.append('start_date', startDate);
-      bodyFormData.append('end_date', endDate);
+      bodyFormData.append(
+        'start_date',
+        formData.start_date.split('-').reverse().join('-')
+      );
+      bodyFormData.append(
+        'end_date',
+        formData.end_date.split('-').reverse().join('-')
+      );
 
       axios({
         method: 'post',
@@ -236,6 +230,8 @@ export default function AddDeals(props) {
           console.log(response['data']['data']);
           setDisable(false);
           toast.success('New deal added successfully.');
+          setPicture('');
+          history.push(`/deals`);
         })
         .catch((error) => {
           console.log('Errors', error);

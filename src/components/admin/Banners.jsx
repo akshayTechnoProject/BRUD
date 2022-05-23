@@ -133,7 +133,7 @@ export default function Banners() {
     let error = {};
     if (addPicture === false) {
       isValid = false;
-      error['img_error'] = 'please choose an image';
+      error['img_error'] = 'Please choose an image';
     }
     setError(error);
     return isValid;
@@ -222,6 +222,13 @@ export default function Banners() {
           >
             <div className="card card-body" style={{ borderRadius: '20px' }}>
               <form onSubmit={setImageAction} encType="multipart/form-data">
+                <label
+                  for="exampleInputPassword1"
+                  style={{ fontSize: '16px', fontWeight: '600' }}
+                >
+                  Image:
+                </label>
+                <br />
                 <input
                   type="file"
                   name="image"
