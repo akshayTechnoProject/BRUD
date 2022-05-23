@@ -272,17 +272,18 @@ const Deals = () => {
             <li className="breadcrumb-item active currentPath">Deals</li>
           </ol>
           <h1 className="page-header">Deals</h1>
-          <button
-            className="btn btn-secondary mb-3"
-            type="button"
-            style={{ borderRadius: '20px' }}
-          >
-            <NavLink to="/addDeals">
+
+          <NavLink to="/addDeals">
+            <button
+              className="btn btn-secondary mb-3"
+              type="button"
+              style={{ borderRadius: '20px' }}
+            >
               <span style={{ color: '#fff', textDecoration: 'none' }}>
                 Add Deals
               </span>
-            </NavLink>
-          </button>
+            </button>
+          </NavLink>
           <div
             style={{
               backgroundColor: 'white',
