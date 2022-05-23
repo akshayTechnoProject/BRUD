@@ -1,60 +1,60 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from "react";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
 // import { toast } from "react-toastify";
-import { TableHeader, Pagination, Search } from '../Table';
-import { Dropdown, Table } from 'react-bootstrap';
-import Loader from '../include/Loader';
-import Menu from '../include/Menu';
-import axios from 'axios';
-import AddDeals from './AddDeals';
-import { Link } from 'react-router-dom';
+import { TableHeader, Pagination, Search } from "../Table";
+import { Dropdown, Table } from "react-bootstrap";
+import Loader from "../include/Loader";
+import Menu from "../include/Menu";
+import axios from "axios";
+import AddDeals from "./AddDeals";
+import { Link } from "react-router-dom";
 
 const Deals = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
   const [limit, setlimit] = useState(10);
   const [data, setData] = useState(10);
   const Header = [
     {
-      name: 'Sr. NO.',
-      field: 'sr_no',
+      name: "Sr. NO.",
+      field: "sr_no",
       sortable: false,
     },
     {
-      name: 'Image',
-      field: 'image',
+      name: "Image",
+      field: "image",
       sortable: false,
     },
     {
-      name: 'Title',
-      field: 'title',
+      name: "Title",
+      field: "title",
       sortable: false,
     },
     {
-      name: 'Start Date',
-      field: 'start_date',
+      name: "Start Date",
+      field: "start_date",
       sortable: false,
     },
     {
-      name: 'End Date',
-      field: 'end_date',
+      name: "End Date",
+      field: "end_date",
       sortable: false,
     },
     {
-      name: 'Details',
-      field: 'details',
+      name: "Details",
+      field: "details",
       sortable: false,
     },
     {
-      name: 'Update',
-      field: 'Update',
+      name: "Update",
+      field: "Update",
       sortable: false,
     },
     {
-      name: 'Delete',
-      field: 'delete',
+      name: "Delete",
+      field: "delete",
       sortable: false,
     },
   ];
@@ -70,47 +70,47 @@ const Deals = () => {
     if (time.length > 1) {
       // If time format correct
       time = time.slice(1); // Remove full string match value
-      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+      time[5] = +time[0] < 12 ? " AM" : " PM"; // Set AM/PM
       time[0] = +time[0] % 12 || 12; // Adjust hours
     }
-    return time.join(''); // return adjusted time or original string
+    return time.join(""); // return adjusted time or original string
   }
 
   const getDeals = (id) => {
-    const myURL = 'http://54.177.165.108:3000/api/admin/deals-list';
+    const myURL = "http://54.177.165.108:3000/api/admin/deals-list";
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+    bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
 
     axios({
-      method: 'post',
+      method: "post",
       url: myURL,
       data: bodyFormData,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
       .then(async (response) => {
-        console.log(response['data']['data']);
-        setData(response['data']['data']);
+        console.log(response["data"]["data"]);
+        setData(response["data"]["data"]);
 
-        var indexedData = await response['data']['data']?.map((e, i) => {
+        var indexedData = await response["data"]["data"]?.map((e, i) => {
           e = { ...e };
           e = { ...e, sr_no: i + 1 };
           e = {
             ...e,
-            createdAt: e?.createdAt ? setDateFormat(e.createdAt) : 'N/A',
-            description: e?.description ? e?.description : 'N/A',
-            end_date: e?.end_date ? e?.end_date : 'N/A',
-            id: e?.id ? e?.id : 'N/A',
+            createdAt: e?.createdAt ? setDateFormat(e.createdAt) : "N/A",
+            description: e?.description ? e?.description : "N/A",
+            end_date: e?.end_date ? e?.end_date : "N/A",
+            id: e?.id ? e?.id : "N/A",
 
-            item_id: e?.item_id ? e?.item_id : 'N/A',
-            pts_one: e?.pts_one ? e?.pts_one : 'N/A',
-            short_desc: e?.short_desc ? e?.short_desc : 'N/A',
-            start_date: e?.start_date ? e?.start_date : 'N/A',
-            status: e?.status ? e?.status : 'N/A',
-            terms_conditions: e?.terms_conditions ? e?.terms_conditions : 'N/A',
-            title: e?.title ? e?.title : 'N/A',
-            pts_two: e?.pts_two ? e?.pts_two : 'N/A',
-            updatedAt: e?.updatedAt ? e?.updatedAt : 'N/A',
-            restaurant_id: e?.restaurant_id ? e?.restaurant_id : 'N/A',
+            item_id: e?.item_id ? e?.item_id : "N/A",
+            pts_one: e?.pts_one ? e?.pts_one : "N/A",
+            short_desc: e?.short_desc ? e?.short_desc : "N/A",
+            start_date: e?.start_date ? e?.start_date : "N/A",
+            status: e?.status ? e?.status : "N/A",
+            terms_conditions: e?.terms_conditions ? e?.terms_conditions : "N/A",
+            title: e?.title ? e?.title : "N/A",
+            pts_two: e?.pts_two ? e?.pts_two : "N/A",
+            updatedAt: e?.updatedAt ? e?.updatedAt : "N/A",
+            restaurant_id: e?.restaurant_id ? e?.restaurant_id : "N/A",
             image: e?.image ? (
               <img src={e?.image} width="70px" height="60px" alt="Img" />
             ) : (
@@ -126,10 +126,10 @@ const Deals = () => {
           return e;
         });
         setDealsList(indexedData);
-        console.log('0000', indexedData);
+        console.log("0000", indexedData);
       })
       .catch((error) => {
-        console.log('Errors', error);
+        console.log("Errors", error);
       });
   };
 
@@ -142,23 +142,23 @@ const Deals = () => {
     //setRestoListEmail([...new Set(restoListEmail)]);
     //setRestoList([...new Set(restoList)]);
 
-    document.getElementById('page-loader').style.display = 'none';
+    document.getElementById("page-loader").style.display = "none";
 
-    var element = document.getElementById('page-container');
-    element.classList.add('show');
+    var element = document.getElementById("page-container");
+    element.classList.add("show");
   }, []);
 
   function setDateFormat(e) {
     var d = new Date(e);
     return (
-      ('0' + d.getDate()).slice(-2) +
-      '-' +
-      ('0' + (d.getMonth() + 1)).slice(-2) +
-      '-' +
+      ("0" + d.getDate()).slice(-2) +
+      "-" +
+      ("0" + (d.getMonth() + 1)).slice(-2) +
+      "-" +
       d.getFullYear() +
-      ' ' +
+      " " +
       tConvert(
-        ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2)
+        ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2)
       )
     );
   }
@@ -179,7 +179,7 @@ const Deals = () => {
 
     //Sorting comments
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
       computedComments = computedComments.sort(
         (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
       );
@@ -193,23 +193,23 @@ const Deals = () => {
   }, [currentPage, search, sorting, dealsList, limit]);
 
   const deleteBanner = (id) => {
-    if (window.confirm('Are you sure you wish to delete it?')) {
+    if (window.confirm("Are you sure you wish to delete it?")) {
       const myurl = `http://54.177.165.108:3000/api/admin/deals-delete`;
       var bodyFormData = new URLSearchParams();
-      bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
-      bodyFormData.append('deals_id', id);
+      bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
+      bodyFormData.append("deals_id", id);
       axios({
-        method: 'post',
+        method: "post",
         url: myurl,
         data: bodyFormData,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
         .then((response) => {
-          console.log('delete', response);
+          console.log("delete", response);
           getDeals();
         })
         .catch((error) => {
-          console.log('Errors', error);
+          console.log("Errors", error);
         });
     }
   };
@@ -237,15 +237,15 @@ const Deals = () => {
           <button
             className="btn btn-secondary mb-3"
             type="button"
-            style={{ borderRadius: '20px' }}
+            style={{ borderRadius: "20px" }}
           >
             <Link to="/addDeals">Add Deals</Link>
           </button>
           <div
             style={{
-              backgroundColor: 'white',
-              padding: '20px',
-              borderRadius: '20px',
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "20px",
             }}
           >
             <div className="row w-100">
@@ -267,11 +267,11 @@ const Deals = () => {
                   <div className="col-xl-6 col-lg-6 col-sm-6 col-12 d-flex justify-content-end mb-3">
                     <div
                       style={{
-                        color: 'black',
-                        fontSize: '12px',
-                        fontWeight: '300',
-                        paddingTop: '0px',
-                        paddingBottom: '0px',
+                        color: "black",
+                        fontSize: "12px",
+                        fontWeight: "300",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
                       }}
                       className="align-self-center"
                     >
@@ -283,11 +283,11 @@ const Deals = () => {
                           variant="none"
                           id="dropdown-basic"
                           style={{
-                            cursor: 'auto',
-                            backgroundColor: 'white',
-                            borderColor: '#d5dbe0',
-                            paddingBottom: '3px',
-                            paddingTop: '3px',
+                            cursor: "auto",
+                            backgroundColor: "white",
+                            borderColor: "#d5dbe0",
+                            paddingBottom: "3px",
+                            paddingTop: "3px",
                           }}
                         >
                           {limit}&nbsp;<i className="fa fa-caret-down"></i>
@@ -363,17 +363,17 @@ const Deals = () => {
                             <tr>
                               <td>{e?.sr_no}</td>
                               <td>{e?.image}</td>
-                              <td>{e?.title ? e?.title : 'N/A'}</td>
+                              <td>{e?.title ? e?.title : "N/A"}</td>
                               <td>{e?.start_date}</td>
                               <td>{e?.end_date}</td>
 
                               <td>
                                 <i
                                   className="fa fa-eye edit"
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() =>
                                     history.push({
-                                      pathname: '/dealsDetails',
+                                      pathname: "/dealsDetails",
                                       state: data[i],
                                     })
                                   }
@@ -382,21 +382,21 @@ const Deals = () => {
                               <td>
                                 <i
                                   className="fa fa-pen edit"
-                                  style={{ cursor: 'pointer' }}
-                                  onClick={() =>
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => {
                                     history.push({
-                                      pathname: '/updateDeals',
+                                      pathname: "/updateDeals",
                                       state: data[i],
-                                    })
-                                  }
+                                    });
+                                  }}
                                 ></i>
                               </td>
                               <td onClick={() => deleteBanner(e?.id)}>
                                 <i
                                   class="fa fa-trash delete"
                                   style={{
-                                    cursor: 'pointer',
-                                    marginLeft: '13px',
+                                    cursor: "pointer",
+                                    marginLeft: "13px",
                                   }}
                                 ></i>
                               </td>
@@ -410,7 +410,7 @@ const Deals = () => {
                 <div
                   className="mt-2 d-flex justify-content-sm-center justify-content-xs-center justify-content-lg-end"
                   style={{
-                    overflowX: 'auto',
+                    overflowX: "auto",
                   }}
                 >
                   <Pagination

@@ -1,23 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import Loader from '../include/Loader';
-import Menu from '../include/Menu';
-import Footer from '../include/Footer';
-import { NavLink, useHistory, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import Loader from "../include/Loader";
+import Menu from "../include/Menu";
+import Footer from "../include/Footer";
+import { NavLink, useHistory, useLocation } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function UpdateDeals() {
   const [disable, setDisable] = useState(false);
   const history = useHistory();
   const location = useLocation();
   var data = location.state;
-  console.log('data', data);
-  const SubmitEvent = () => {};
+  const [deal, setdeal] = useState(data);
+
+  console.log("data", data);
+  const SubmitEvent = (e) => {
+    e.preventDefault();
+    setDisable(true);
+
+    if (validate()) {
+      const myurl = "http://54.177.165.108:3000/api/admin/deals";
+      var bodyFormData = new URLSearchParams();
+      bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
+      bodyFormData.append("deals_id", deal.id);
+      bodyFormData.append("restaurant_id", deal.restaurant_name);
+      bodyFormData.append("item_id", deal.manager_name);
+      bodyFormData.append("pts_one", deal.pts_one);
+      bodyFormData.append("title", deal.title);
+      bodyFormData.append("short_desc", deal.short_desc);
+      bodyFormData.append("description", deal.description);
+      bodyFormData.append("terms_conditions", deal.terms_conditions);
+      bodyFormData.append("image", deal.image);
+      bodyFormData.append("start_date", deal.longitude);
+      bodyFormData.append("end_date", deal.end);
+
+      axios({
+        method: "post",
+        url: myurl,
+        data: bodyFormData,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+        .then((response) => {
+          console.log(response["data"]["data"]);
+          console.log("Successfull!!!!");
+          setDisable(false);
+          toast.success("Updated Successfully...!");
+          history.push(`/deals`);
+        })
+        .catch((error) => {
+          console.log("Errors", error);
+          setDisable(false);
+        });
+    }
+  };
 
   useEffect(() => {
-    document.getElementById('page-loader').style.display = 'none';
-    var element = document.getElementById('page-container');
-    element.classList.add('show');
+    document.getElementById("page-loader").style.display = "none";
+    var element = document.getElementById("page-container");
+    element.classList.add("show");
   });
 
   return (
@@ -41,15 +81,15 @@ export default function UpdateDeals() {
               {/* {data.restaurant_name} */}
             </li>
           </ol>
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: "flex" }}>
             <i
               className="fa fa-arrow-left edit"
               onClick={useHistory().goBack}
               style={{
-                cursor: 'pointer',
-                fontSize: '20px',
-                marginTop: '7px',
-                marginRight: '10px',
+                cursor: "pointer",
+                fontSize: "20px",
+                marginTop: "7px",
+                marginRight: "10px",
               }}
             ></i>
             <h1 className="page-header">Update Restaurant Detail</h1>
@@ -59,10 +99,10 @@ export default function UpdateDeals() {
             <div className="card-body">
               <div
                 className="row RestName p-5"
-                style={{ borderRadius: '20px' }}
+                style={{ borderRadius: "20px" }}
               >
                 <div className="mx-auto ">
-                  <span style={{ fontSize: '18px', fontWeight: '700' }}>
+                  <span style={{ fontSize: "18px", fontWeight: "700" }}>
                     {}
                   </span>
                 </div>
@@ -133,12 +173,12 @@ export default function UpdateDeals() {
                     className="btn "
                     disabled={disable}
                     style={{
-                      borderRadius: '20px',
-                      backgroundColor: '#f55800',
-                      color: '#fff',
+                      borderRadius: "20px",
+                      backgroundColor: "#f55800",
+                      color: "#fff",
                     }}
                   >
-                    {disable ? 'Processing...' : 'Update'}
+                    {disable ? "Processing..." : "Update"}
                   </button>
                 </form>
               </div>
