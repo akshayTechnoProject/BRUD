@@ -117,6 +117,7 @@ const Deals = () => {
         console.log('Errors', error);
       });
   };
+
   function setDateFormat(e) {
     var d = new Date(e);
     return (
@@ -381,12 +382,17 @@ const Deals = () => {
                                 <i
                                   className="fa fa-pen edit"
                                   style={{ cursor: 'pointer' }}
-                                  onClick={() =>
+                                  onClick={() => {
+                                    console.log(e);
                                     history.push({
                                       pathname: '/updateDeals',
-                                      state: data[i],
-                                    })
-                                  }
+                                      state: {
+                                        ...data[i],
+                                        restaurant_id: e.restaurant_id,
+                                        item_id: e.item_id,
+                                      },
+                                    });
+                                  }}
                                 ></i>
                               </td>
                               <td onClick={() => deleteBanner(e?.id)}>
