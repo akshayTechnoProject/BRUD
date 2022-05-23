@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import Loader from '../include/Loader';
 import Menu from '../include/Menu';
@@ -6,7 +6,7 @@ import Footer from '../include/Footer';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { faL } from '@fortawesome/free-solid-svg-icons';
-
+import AsyncSelect from 'react-select/async';
 export default function AddDeals(props) {
   const history = useHistory();
   const [img, setImg] = useState({
@@ -51,20 +51,23 @@ export default function AddDeals(props) {
     })
       .then(async (response) => {
         console.log('getRestoList', response['data']['data']);
-        for (let index = 0; index < response['data']['data']?.length; index++) {
-          resto.push(response['data']['data'][index]);
-          restoList.push(response['data']['data'][index].restaurant_name);
-          setResto([...new Set(resto)]);
-          setRestoList([...new Set(restoList)]);
-        }
+        //for (let index = 0; index < response['data']['data']?.length; index++) {
+        //resto.push(response['data']['data'][index]);
+        //restoList.push(response['data']['data'][index].restaurant_name);
+        //setResto([...new Set(resto)]);
+        //setRestoList([...new Set(restoList)]);
+        //}
+        setResto(response['data']['data']);
         console.log('111', resto);
         console.log('222', restoList);
+        return response['data']['data'];
       })
       .catch((error) => {
         console.log('Errors', error);
       });
   };
-
+  //const handleChange = () => {};
+  //const handleInputChange = () => {};
   useEffect(() => {
     getRestoList();
     document.getElementById('page-loader').style.display = 'none';
@@ -92,6 +95,9 @@ export default function AddDeals(props) {
     })
       .then(async (response) => {
         console.log('getItemList', response['data']['data']);
+        //response['data']['data'].map((e, i) => {});
+        let data = Object.entries(response['data']['data']);
+        console.log('...........', data);
         setGetItemList(response['data']['data']);
       })
       .catch((error) => {
@@ -153,7 +159,6 @@ export default function AddDeals(props) {
     setError(error);
     return isValid;
   };
-  console.log('error::::', error);
 
   const uploadPicture = async (e) => {
     e.preventDefault();
@@ -242,10 +247,17 @@ export default function AddDeals(props) {
       setDisable(false);
     }
   };
+  const getOptions = resto.map((e, i) => {
+    if (
+      e?.restaurant_name != '' &&
+      e?.restaurant_name != undefined &&
+      e?.restaurant_name != 'N/A'
+    ) {
+      return { value: e?.id, label: e?.restaurant_name };
+    }
+  });
 
   console.log('Item Array:', itemIDArray.toString());
-  console.log('Item Name:', itemName);
-  console.log('>>>>>:', formData);
 
   return (
     <>
@@ -295,6 +307,16 @@ export default function AddDeals(props) {
               <br />
               <form onSubmit={submitHendler} className="addDealsForm">
                 <div class="form-group">
+                  <AsyncSelect
+                    cacheOptions
+                    defaultOptions
+                    //value={selectedValue}
+                    getOptionLabel={(e) => e?.restaurant_id}
+                    getOptionValue={(e) => e?.id}
+                    loadOptions={getRestoList}
+                    //onInputChange={handleInputChange}
+                    //onChange={handleChange}
+                  ></AsyncSelect>
                   <label for="inputState">Restaurant Name:</label>
                   <select
                     id="inputState"
@@ -304,7 +326,6 @@ export default function AddDeals(props) {
                       if (e.target.value != 'Choose Restaurant') {
                         setRestDataID(e.target.value);
                         setItemIDArray([]);
-                        setChange(!change);
                         selectRestaurant(e);
                         setItemID('');
                       } else {
@@ -339,6 +360,7 @@ export default function AddDeals(props) {
                         class="form-control ml-0"
                         style={{ borderRadius: '20px' }}
                         onChange={(e) => {
+                          console.log('...>>>>', e.target.name);
                           if (e.target.value != 'Choose Items') {
                             setItemID(e.target.value);
                           } else {
@@ -351,7 +373,7 @@ export default function AddDeals(props) {
                           return (
                             <option value={e?.id} name={e?.item_name}>
                               {e?.category_type} &nbsp; → &nbsp;
-                              {e?.item_name} &nbsp; → &nbsp; price:{' '}
+                              {e?.item_name} &nbsp; → &nbsp; price:
                               {e?.price?.replace('$', '')}
                             </option>
                           );
