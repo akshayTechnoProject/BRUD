@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Loader from '../include/Loader';
 import Menu from '../include/Menu';
@@ -6,7 +6,7 @@ import Footer from '../include/Footer';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { faL } from '@fortawesome/free-solid-svg-icons';
-import AsyncSelect from 'react-select/async';
+
 export default function AddDeals(props) {
   const history = useHistory();
   const [img, setImg] = useState({
@@ -14,7 +14,7 @@ export default function AddDeals(props) {
     alt: '',
   });
   const [resto, setResto] = useState([]);
-  const [getItemList, setGetItemList] = useState();
+  const [getItemList, setGetItemList] = useState([]);
   const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
   const [itemName, setItemName] = useState();
@@ -51,23 +51,27 @@ export default function AddDeals(props) {
     })
       .then(async (response) => {
         console.log('getRestoList', response['data']['data']);
-        //for (let index = 0; index < response['data']['data']?.length; index++) {
-        //resto.push(response['data']['data'][index]);
-        //restoList.push(response['data']['data'][index].restaurant_name);
-        //setResto([...new Set(resto)]);
-        //setRestoList([...new Set(restoList)]);
-        //}
-        setResto(response['data']['data']);
+        for (let index = 0; index < response['data']['data']?.length; index++) {
+          resto.push(response['data']['data'][index]);
+          restoList.push(response['data']['data'][index].restaurant_name);
+          setResto([...new Set(resto)]);
+          setRestoList([...new Set(restoList)]);
+        }
         console.log('111', resto);
         console.log('222', restoList);
-        return response['data']['data'];
       })
       .catch((error) => {
         console.log('Errors', error);
       });
   };
-  //const handleChange = () => {};
-  //const handleInputChange = () => {};
+  useEffect(() => {
+    const intersection = getItemList.filter((element) =>
+      itemIDArray.includes(element.id)
+    );
+    console.log(intersection);
+    setItemNameArray(intersection);
+  }, [itemIDArray]);
+
   useEffect(() => {
     getRestoList();
     document.getElementById('page-loader').style.display = 'none';
@@ -95,9 +99,6 @@ export default function AddDeals(props) {
     })
       .then(async (response) => {
         console.log('getItemList', response['data']['data']);
-        //response['data']['data'].map((e, i) => {});
-        let data = Object.entries(response['data']['data']);
-        console.log('...........', data);
         setGetItemList(response['data']['data']);
       })
       .catch((error) => {
@@ -159,6 +160,7 @@ export default function AddDeals(props) {
     setError(error);
     return isValid;
   };
+  console.log('error::::', error);
 
   const uploadPicture = async (e) => {
     e.preventDefault();
@@ -258,6 +260,8 @@ export default function AddDeals(props) {
   });
 
   console.log('Item Array:', itemIDArray.toString());
+  console.log('Item Name:', itemName);
+  console.log('>>>>>:', formData);
 
   return (
     <>
@@ -307,16 +311,6 @@ export default function AddDeals(props) {
               <br />
               <form onSubmit={submitHendler} className="addDealsForm">
                 <div class="form-group">
-                  <AsyncSelect
-                    cacheOptions
-                    defaultOptions
-                    //value={selectedValue}
-                    getOptionLabel={(e) => e?.restaurant_id}
-                    getOptionValue={(e) => e?.id}
-                    loadOptions={getRestoList}
-                    //onInputChange={handleInputChange}
-                    //onChange={handleChange}
-                  ></AsyncSelect>
                   <label for="inputState">Restaurant Name:</label>
                   <select
                     id="inputState"
@@ -360,7 +354,6 @@ export default function AddDeals(props) {
                         class="form-control ml-0"
                         style={{ borderRadius: '20px' }}
                         onChange={(e) => {
-                          console.log('...>>>>', e.target.name);
                           if (e.target.value != 'Choose Items') {
                             setItemID(e.target.value);
                           } else {
@@ -373,7 +366,7 @@ export default function AddDeals(props) {
                           return (
                             <option value={e?.id} name={e?.item_name}>
                               {e?.category_type} &nbsp; → &nbsp;
-                              {e?.item_name} &nbsp; → &nbsp; price:
+                              {e?.item_name} &nbsp; → &nbsp; price:{' '}
                               {e?.price?.replace('$', '')}
                             </option>
                           );
@@ -394,9 +387,9 @@ export default function AddDeals(props) {
                             setItemIDArray([
                               ...new Set([...itemIDArray, itemID]),
                             ]);
-                          setItemNameArray([
-                            ...new Set([...itemNameArray, itemID]),
-                          ]);
+                          // setItemNameArray([
+                          //   ...new Set([...itemNameArray, itemID]),
+                          // ]);
                           setItemID('');
                         }}
                       >
@@ -407,7 +400,7 @@ export default function AddDeals(props) {
                     <div className="topDestinationsDiv row">
                       {itemIDArray.length !== 0 ? (
                         <div className="row ml-2 mt-2">
-                          {itemIDArray.map((subItems, i) => {
+                          {itemNameArray.map((subItems, i) => {
                             return (
                               <button
                                 className="btn m-4 placeButton"
@@ -420,7 +413,11 @@ export default function AddDeals(props) {
                                   e.preventDefault();
                                 }}
                               >
-                                {subItems}
+                                {subItems.category_type +
+                                  ' -> ' +
+                                  subItems.item_name +
+                                  ' -> ' +
+                                  subItems.price.replace('$', '')}
                                 <span className="placeDeleteIcon">
                                   <i
                                     className="fa fa-trash placeDeleteIcon"
@@ -433,8 +430,16 @@ export default function AddDeals(props) {
                                       if (index !== -1) {
                                         array.splice(index, 1);
                                         setItemIDArray(array);
-                                        setChange(!change);
+                                        // setChange(!change);
                                       }
+                                      let array1 = itemNameArray;
+
+                                      if (index !== -1) {
+                                        array1.splice(index, 1);
+                                        setItemNameArray(array1);
+                                        // setChange(!change);
+                                      }
+                                      setChange(!change);
                                     }}
                                   ></i>
                                 </span>
