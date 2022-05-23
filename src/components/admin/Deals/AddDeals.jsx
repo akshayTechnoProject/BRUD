@@ -310,8 +310,8 @@ export default function AddDeals(props) {
                       } else {
                         setRestDataID('');
                         setItemIDArray([]);
-                        setItemID('');
                         setChange(!change);
+                        setItemID('');
                       }
                     }}
                   >
@@ -323,9 +323,7 @@ export default function AddDeals(props) {
                         e?.restaurant_name != 'N/A'
                       ) {
                         return (
-                          <option value={e?.id}>
-                            {e?.restaurant_name} &nbsp;
-                          </option>
+                          <option value={e?.id}>{e?.restaurant_name}</option>
                         );
                       }
                     })}
