@@ -315,3 +315,6 @@ input {
 .addDealsForm .form-group input {
   margin-top: 0px;
 }
+.addDealsForm .form-group ::-webkit-scrollbar {
+  display: none;
+}

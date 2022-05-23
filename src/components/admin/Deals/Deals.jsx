@@ -15,6 +15,8 @@ const Deals = () => {
   const [sorting, setSorting] = useState({ field: '', order: '' });
   const [limit, setlimit] = useState(10);
   const [data, setData] = useState(10);
+  const [restIdList, setRestIdList] = useState([]);
+  const [restoList, setRestoList] = useState([]);
   const Header = [
     {
       name: 'Sr. NO.',
@@ -107,17 +109,58 @@ const Deals = () => {
               />
             ),
           };
+          if (e?.restaurant_id) {
+            e = { ...e, restName: e?.restaurant_id };
+          } else {
+            e = { ...e, restName: 'N/A' };
+          }
           //getRestoName(e?.restaurant_id);
+          restIdList.push(e?.restaurant_id);
+          setRestIdList([...new Set(restIdList)]);
           return e;
         });
+
         setDealsList(indexedData);
         console.log('0000', indexedData);
+        console.log('restIdList', restIdList);
       })
       .catch((error) => {
         console.log('Errors', error);
       });
   };
+  /*
+  const getResto = () => {
+    const myurl = 'http://54.177.165.108:3000/api/admin/deals-restaurants-list';
+    var bodyFormData = new URLSearchParams();
+    bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
 
+    axios({
+      method: 'post',
+      url: myurl,
+      data: bodyFormData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+      .then(async (response) => {
+        console.log('Rest ::::::::::::', response['data']['data']);
+        var restData = await response['data']['data']?.map((e, i) => {
+          e = { ...e };
+          e = { ...e, sr_no: i + 1 };
+
+          e = {
+            ...e,
+            email: e?.email ? e?.email : 'N/A',
+            id: e?.id ? e?.id : 'N/A',
+            restaurant_name: e?.restaurant_name ? e?.restaurant_name : 'N/A',
+          };
+          return e;
+        });
+        setRestoList(restData);
+      })
+      .catch((error) => {
+        console.log('Errors 000000', error);
+      });
+  };
+*/
   function setDateFormat(e) {
     var d = new Date(e);
     return (
@@ -148,7 +191,11 @@ const Deals = () => {
   }
 
   useEffect(() => {
-    getDeals();
+    async function fetchData() {
+      //await getResto();
+      await getDeals();
+    }
+    fetchData();
 
     document.getElementById('page-loader').style.display = 'none';
 
@@ -160,12 +207,8 @@ const Deals = () => {
     let computedComments = dealsList;
 
     if (search) {
-      computedComments = computedComments.filter(
-        (dealsList) =>
-          dealsList.restaurant_name
-            .toLowerCase()
-            .includes(search.toLowerCase()) ||
-          dealsList.email.toLowerCase().includes(search.toLowerCase())
+      computedComments = computedComments.filter((dealsList) =>
+        dealsList.title.toLowerCase().includes(search.toLowerCase())
       );
     }
     setTotalItems(computedComments.length);
