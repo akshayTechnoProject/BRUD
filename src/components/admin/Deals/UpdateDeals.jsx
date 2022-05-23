@@ -11,8 +11,11 @@ export default function UpdateDeals() {
   const history = useHistory();
   const location = useLocation();
   var data1 = location.state;
-  console.log("dattttttt", data1);
-  const [deal, setdeal] = useState(data1);
+  // console.log("dattttttt", data1);
+  const [deal, setdeal] = useState({
+    ...data1,
+    img: data1.image.split("/").pop(),
+  });
   const [error, setError] = useState({});
 
   const [data, setData] = useState(10);
@@ -239,6 +242,7 @@ export default function UpdateDeals() {
           setAddPicture(false);
         });
     } else {
+      setdeal(...deal);
       setPicture();
       setAddPicture(false);
       setDisable(false);
@@ -251,6 +255,7 @@ export default function UpdateDeals() {
     setDisable(true);
 
     if (validate()) {
+      console.log(deal);
       const myurl = "http://54.177.165.108:3000/api/admin/update-deals";
       var bodyFormData = new URLSearchParams();
       bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
@@ -601,11 +606,14 @@ export default function UpdateDeals() {
                       placeholder="DD-MM-YYYY"
                       style={{ borderRadius: "20px" }}
                       name="start_date"
-                      value={deal.start_date}
+                      value={deal.start_date?.split("-").reverse().join("-")}
                       onChange={(e) => {
                         setdeal({
                           ...deal,
-                          start_date: e.target.value,
+                          start_date: e.target.value
+                            ?.split("-")
+                            .reverse()
+                            .join("-"),
                         });
                       }}
                     />
@@ -620,11 +628,14 @@ export default function UpdateDeals() {
                       placeholder="DD-MM-YYYY"
                       style={{ borderRadius: "20px" }}
                       name="end_date"
-                      value={deal.end_date}
+                      value={deal.end_date?.split("-").reverse().join("-")}
                       onChange={(e) => {
                         setdeal({
                           ...deal,
-                          end_date: e.target.value,
+                          end_date: e.target.value
+                            ?.split("-")
+                            .reverse()
+                            .join("-"),
                         });
                       }}
                     />
