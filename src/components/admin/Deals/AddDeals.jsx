@@ -4,6 +4,7 @@ import Loader from '../include/Loader';
 import Menu from '../include/Menu';
 import Footer from '../include/Footer';
 import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function AddDeals(props) {
   const [data, setData] = useState(10);
@@ -160,7 +161,9 @@ export default function AddDeals(props) {
       }
     }
     setError(error);
+    return isValid;
   };
+  console.log('error::::', error);
 
   const uploadPicture = async (e) => {
     e.preventDefault();
@@ -195,6 +198,7 @@ export default function AddDeals(props) {
           setDisable(false);
           setPicture();
           setAddPicture(false);
+          toast.success('Something went wrong.');
         });
     } else {
       setPicture();
@@ -207,16 +211,46 @@ export default function AddDeals(props) {
   const submitHendler = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log('..', restDataID);
-      console.log('..', itemIDArray.toString());
-      console.log('..', picture);
-      console.log('..', formData.description);
-      console.log('..', endDate);
-      console.log('..', formData.pts_one);
-      console.log('..', formData.short_desc);
-      console.log('..', startDate);
-      console.log('..', formData.title);
-      console.log('..', formData.terms_conditions);
+      const myURL = `http://54.177.165.108:3000/api/admin/add-deals`;
+      var bodyFormData = new URLSearchParams();
+      bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+      bodyFormData.append('restaurant_id', restDataID);
+      bodyFormData.append('item_id', itemIDArray.toString());
+      bodyFormData.append('pts_one', formData.pts_one);
+      bodyFormData.append('title', formData.title);
+      bodyFormData.append('short_desc', formData.short_desc);
+      bodyFormData.append('description', formData.description);
+      bodyFormData.append('terms_conditions', formData.terms_conditions);
+      bodyFormData.append('image', picture);
+      bodyFormData.append('start_date', startDate);
+      bodyFormData.append('end_date', endDate);
+
+      axios({
+        method: 'post',
+        url: myURL,
+        data: bodyFormData,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
+        .then(async (response) => {
+          console.log(response['data']['data']);
+          toast.success('New deal added successfully.');
+        })
+        .catch((error) => {
+          console.log('Errors', error);
+          toast.success('Something went wrong.');
+        });
+      //console.log('..', restDataID);
+      //console.log('..', itemIDArray.toString());
+      //console.log('..', picture);
+      //console.log('..', formData.description);
+      //console.log('..', endDate);
+      //console.log('..', formData.pts_one);
+      //console.log('..', formData.short_desc);
+      //console.log('..', startDate);
+      //console.log('..', formData.title);
+      //console.log('..', formData.terms_conditions);
+    } else {
+      toast.success('Something went wrong.');
     }
   };
 
@@ -549,8 +583,13 @@ export default function AddDeals(props) {
                 </div>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn m-r-5"
                   disabled={disable}
+                  style={{
+                    borderRadius: '20px',
+                    backgroundColor: '#f55800',
+                    color: '#fff',
+                  }}
                 >
                   {disable ? 'Processing...' : 'Submit'}
                 </button>

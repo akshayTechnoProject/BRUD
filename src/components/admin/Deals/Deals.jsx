@@ -239,7 +239,11 @@ const Deals = () => {
             type="button"
             style={{ borderRadius: '20px' }}
           >
-            <Link to="/addDeals">Add Deals</Link>
+            <NavLink to="/addDeals">
+              <span style={{ color: '#fff', textDecoration: 'none' }}>
+                Add Deals
+              </span>
+            </NavLink>
           </button>
           <div
             style={{
