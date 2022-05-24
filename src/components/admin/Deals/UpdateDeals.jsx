@@ -60,14 +60,16 @@ export default function UpdateDeals() {
     })
       .then(async (response) => {
         console.log('getRestoList', response['data']['data']);
-        for (let index = 0; index < response['data']['data']?.length; index++) {
-          resto.push(response['data']['data'][index]);
-          restoList.push(response['data']['data'][index].restaurant_name);
-        }
-        setResto([...new Set(resto)]);
-        setRestoList([...new Set(restoList)]);
-        //setResto(response['data']['data']);
-        let ktemp = resto.filter((e, i) => e.id == data1.restaurant_id);
+        //for (let index = 0; index < response['data']['data']?.length; index++) {
+        // resto.push(response['data']['data'][index]);
+        // restoList.push(response['data']['data'][index].restaurant_name);
+        //}
+        //setResto([...new Set(resto)]);
+        //setRestoList([...new Set(restoList)]);
+        setResto(response['data']['data']);
+        let ktemp = response['data']['data'].filter(
+          (e, i) => e.id == data1.restaurant_id
+        );
         setdeal({
           ...deal,
           restaurant_name: [...new Set(ktemp)][0].restaurant_name,
