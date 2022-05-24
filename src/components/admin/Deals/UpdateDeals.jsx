@@ -19,15 +19,12 @@ export default function UpdateDeals() {
   });
   const [error, setError] = useState({});
 
-  const [data, setData] = useState(10);
   const [img, setImg] = useState({
     src: "",
     alt: "",
   });
   const [resto, setResto] = useState([]);
   const [getItemList, setGetItemList] = useState([]);
-  const [getItemListArray, setGetItemListArray] = useState();
-  const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
   const [change, setChange] = useState(false);
   const [itemIDArray, setItemIDArray] = useState(data1.item_id.split(","));
@@ -37,15 +34,6 @@ export default function UpdateDeals() {
   const [endDate, setEndDate] = useState();
   const [addPicture, setAddPicture] = useState(true);
   const [picture, setPicture] = useState({});
-  const [formData, setFormData] = useState({
-    title: "",
-    pts_one: "",
-    short_desc: "",
-    description: "",
-    terms_conditions: "",
-    start_date: "",
-    end_date: "",
-  });
 
   const getRestoList = () => {
     const myURL = "http://54.177.165.108:3000/api/admin/deals-restaurants-list";
@@ -204,7 +192,9 @@ export default function UpdateDeals() {
       error["end_date"] = "Please select end date";
     }
     if (input["start_date"].trim() && input["end_date"].trim()) {
-      if (deal.end_date < deal.start_date) {
+      if (
+        new Date(deal.end_date).getTime() < new Date(deal.start_date).getTime()
+      ) {
         isValid = false;
 
         error["end_date"] = "End date should be greater than the start date";
@@ -372,7 +362,8 @@ export default function UpdateDeals() {
                         if (e.target.value != "Choose Restaurant") {
                           setRestDataID(e.target.value);
                           setdeal({ ...deal, restaurant_id: e.target.value });
-
+                          setItemIDArray([]);
+                          setItemNameArray([]);
                           selectRestaurant(e);
                           console.log(e.target.value);
                         } else {
