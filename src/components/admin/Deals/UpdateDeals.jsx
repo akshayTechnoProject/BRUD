@@ -64,9 +64,9 @@ export default function UpdateDeals() {
           resto.push(response['data']['data'][index]);
           restoList.push(response['data']['data'][index].restaurant_name);
         }
-
         setResto([...new Set(resto)]);
         setRestoList([...new Set(restoList)]);
+        //setResto(response['data']['data']);
         let ktemp = resto.filter((e, i) => e.id == data1.restaurant_id);
         setdeal({
           ...deal,
@@ -476,7 +476,7 @@ export default function UpdateDeals() {
                                     subItems.price.replace('$', '')}
                                   <span className="placeDeleteIcon">
                                     <i
-                                      className="fa fa-trash placeDeleteIcon"
+                                      className="fa fa-trash delete"
                                       style={{ marginLeft: '5px' }}
                                       onClick={(e1) => {
                                         e1.preventDefault();
