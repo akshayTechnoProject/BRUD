@@ -54,9 +54,9 @@ export default function AddDeals(props) {
         for (let index = 0; index < response["data"]["data"]?.length; index++) {
           resto.push(response["data"]["data"][index]);
           restoList.push(response["data"]["data"][index].restaurant_name);
-          setResto([...new Set(resto)]);
-          setRestoList([...new Set(restoList)]);
         }
+        setResto([...new Set(resto)]);
+        setRestoList([...new Set(restoList)]);
         console.log("111", resto);
         console.log("222", restoList);
       })
