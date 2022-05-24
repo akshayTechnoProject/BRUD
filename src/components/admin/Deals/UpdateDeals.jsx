@@ -60,13 +60,13 @@ export default function UpdateDeals() {
     })
       .then(async (response) => {
         console.log("getRestoList", response["data"]["data"]);
-        for (let index = 0; index < response["data"]["data"]?.length; index++) {
-          resto.push(response["data"]["data"][index]);
-          restoList.push(response["data"]["data"][index].restaurant_name);
-        }
-
-        setResto([...new Set(resto)]);
-        setRestoList([...new Set(restoList)]);
+        // for (let index = 0; index < response["data"]["data"]?.length; index++) {
+        //   resto.push(response["data"]["data"][index]);
+        //   restoList.push(response["data"]["data"][index].restaurant_name);
+        // }
+        setResto([...new Set(response["data"]["data"])]);
+        setRestoList([...new Set(response["data"]["data"])]);
+        //setResto(response['data']['data']);
         let ktemp = resto.filter((e, i) => e.id == data1.restaurant_id);
         setdeal({
           ...deal,
@@ -476,7 +476,7 @@ export default function UpdateDeals() {
                                     subItems.price.replace("$", "")}
                                   <span className="placeDeleteIcon">
                                     <i
-                                      className="fa fa-trash placeDeleteIcon"
+                                      className="fa fa-trash delete"
                                       style={{ marginLeft: "5px" }}
                                       onClick={(e1) => {
                                         e1.preventDefault();
@@ -680,6 +680,11 @@ export default function UpdateDeals() {
                     type="submit"
                     className="btn btn-primary"
                     disabled={disable}
+                    style={{
+                      borderRadius: "20px",
+                      backgroundColor: "#f55800",
+                      color: "#fff",
+                    }}
                   >
                     {disable ? "Processing..." : "Submit"}
                   </button>

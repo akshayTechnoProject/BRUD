@@ -51,12 +51,13 @@ export default function AddDeals(props) {
     })
       .then(async (response) => {
         console.log("getRestoList", response["data"]["data"]);
-        for (let index = 0; index < response["data"]["data"]?.length; index++) {
-          resto.push(response["data"]["data"][index]);
-          restoList.push(response["data"]["data"][index].restaurant_name);
-        }
-        setResto([...new Set(resto)]);
-        setRestoList([...new Set(restoList)]);
+        //for (let index = 0; index < response['data']['data']?.length; index++) {
+        // resto.push(response['data']['data'][index]);
+        // restoList.push(response['data']['data'][index].restaurant_name);
+        // setResto([...new Set(resto)]);
+        // setRestoList([...new Set(restoList)]);
+        //}
+        setResto(response["data"]["data"]);
         console.log("111", resto);
         console.log("222", restoList);
       })
@@ -252,7 +253,6 @@ export default function AddDeals(props) {
 
   console.log("Item Array:", itemIDArray.toString());
   console.log("Item Name:", itemName);
-  console.log(">>>>>:", formData);
 
   return (
     <>
@@ -311,7 +311,6 @@ export default function AddDeals(props) {
                       if (e.target.value != "Choose Restaurant") {
                         setRestDataID(e.target.value);
                         setItemIDArray([]);
-                        setChange(!change);
                         selectRestaurant(e);
                         setItemID("");
                       } else {
@@ -412,7 +411,7 @@ export default function AddDeals(props) {
                                   subItems.price.replace("$", "")}
                                 <span className="placeDeleteIcon">
                                   <i
-                                    className="fa fa-trash placeDeleteIcon"
+                                    className="fa fa-trash delete"
                                     style={{ marginLeft: "5px" }}
                                     onClick={(e1) => {
                                       e1.preventDefault();
