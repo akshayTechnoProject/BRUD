@@ -328,7 +328,7 @@ export default function UpdateDeals() {
                 <span className="basePath">Deals</span>
               </NavLink>
             </li>
-            <li className="breadcrumb-item currentPath">{deal.title}</li>
+            <li className="breadcrumb-item currentPath"> Update deal</li>
           </ol>
           <div style={{ display: 'flex' }}>
             <i
