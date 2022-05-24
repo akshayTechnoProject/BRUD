@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import Loader from "../include/Loader";
-import Menu from "../include/Menu";
-import Footer from "../include/Footer";
-import { NavLink, useHistory, useLocation } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
+import React, { useState, useEffect } from 'react';
+import Loader from '../include/Loader';
+import Menu from '../include/Menu';
+import Footer from '../include/Footer';
+import { NavLink, useHistory, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function UpdateDeals() {
   const [disable, setDisable] = useState(false);
@@ -14,15 +14,15 @@ export default function UpdateDeals() {
   // console.log("dattttttt", data1);
   const [deal, setdeal] = useState({
     ...data1,
-    img: data1.image.split("/").pop(),
+    img: data1.image.split('/').pop(),
     // item_id: data1.item_id.split(","),
   });
   const [error, setError] = useState({});
 
   const [data, setData] = useState(10);
   const [img, setImg] = useState({
-    src: "",
-    alt: "",
+    src: '',
+    alt: '',
   });
   const [resto, setResto] = useState([]);
   const [getItemList, setGetItemList] = useState([]);
@@ -30,7 +30,7 @@ export default function UpdateDeals() {
   const [restoList, setRestoList] = useState([]);
   const [itemID, setItemID] = useState({});
   const [change, setChange] = useState(false);
-  const [itemIDArray, setItemIDArray] = useState(data1.item_id.split(","));
+  const [itemIDArray, setItemIDArray] = useState(data1.item_id.split(','));
   const [itemNameArray, setItemNameArray] = useState([]);
   const [restDataID, setRestDataID] = useState(deal.restaurant_id);
   const [startDate, setStartDate] = useState();
@@ -38,31 +38,31 @@ export default function UpdateDeals() {
   const [addPicture, setAddPicture] = useState(true);
   const [picture, setPicture] = useState({});
   const [formData, setFormData] = useState({
-    title: "",
-    pts_one: "",
-    short_desc: "",
-    description: "",
-    terms_conditions: "",
-    start_date: "",
-    end_date: "",
+    title: '',
+    pts_one: '',
+    short_desc: '',
+    description: '',
+    terms_conditions: '',
+    start_date: '',
+    end_date: '',
   });
 
   const getRestoList = () => {
-    const myURL = "http://54.177.165.108:3000/api/admin/deals-restaurants-list";
+    const myURL = 'http://54.177.165.108:3000/api/admin/deals-restaurants-list';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
+    bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
 
     axios({
-      method: "post",
+      method: 'post',
       url: myURL,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then(async (response) => {
-        console.log("getRestoList", response["data"]["data"]);
-        for (let index = 0; index < response["data"]["data"]?.length; index++) {
-          resto.push(response["data"]["data"][index]);
-          restoList.push(response["data"]["data"][index].restaurant_name);
+        console.log('getRestoList', response['data']['data']);
+        for (let index = 0; index < response['data']['data']?.length; index++) {
+          resto.push(response['data']['data'][index]);
+          restoList.push(response['data']['data'][index].restaurant_name);
         }
 
         setResto([...new Set(resto)]);
@@ -74,11 +74,11 @@ export default function UpdateDeals() {
         });
       })
       .catch((error) => {
-        console.log("Errors", error);
+        console.log('Errors', error);
       });
   };
   useEffect(() => {
-    let k1 = data1.item_id.split(",");
+    let k1 = data1.item_id.split(',');
     const intersection = getItemList.filter((element) =>
       itemIDArray.includes(element.id)
     );
@@ -87,26 +87,26 @@ export default function UpdateDeals() {
   }, [itemIDArray]);
   useEffect(() => {
     const myURL =
-      "http://54.177.165.108:3000/api/admin/deals-restaurants-items-list";
+      'http://54.177.165.108:3000/api/admin/deals-restaurants-items-list';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
-    bodyFormData.append("restaurant_id", data1.restaurant_id);
+    bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+    bodyFormData.append('restaurant_id', data1.restaurant_id);
 
     axios({
-      method: "post",
+      method: 'post',
       url: myURL,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then(async (response) => {
-        console.log("getItemList", response["data"]["data"]);
-        setGetItemList(response["data"]["data"]);
-        let ktemp = response["data"]["data"].filter(
+        console.log('getItemList', response['data']['data']);
+        setGetItemList(response['data']['data']);
+        let ktemp = response['data']['data'].filter(
           (e, i) => e.id == deal.item_id
         );
-        let k1 = data1.item_id.split(",");
+        let k1 = data1.item_id.split(',');
 
-        const intersection = response["data"]["data"].filter((element) =>
+        const intersection = response['data']['data'].filter((element) =>
           k1.includes(element.id)
         );
         console.log(intersection);
@@ -118,42 +118,42 @@ export default function UpdateDeals() {
         });
       })
       .catch((error) => {
-        console.log("Errors", error);
+        console.log('Errors', error);
       });
   }, []);
 
   useEffect(() => {
     getRestoList();
 
-    document.getElementById("page-loader").style.display = "none";
+    document.getElementById('page-loader').style.display = 'none';
 
-    var element = document.getElementById("page-container");
-    element.classList.add("show");
+    var element = document.getElementById('page-container');
+    element.classList.add('show');
   }, [change]);
 
   const selectRestaurant = async (e) => {
-    console.log("::::", e.target.value);
+    console.log('::::', e.target.value);
     await getItem(e.target.value);
   };
   const getItem = (id) => {
     const myURL =
-      "http://54.177.165.108:3000/api/admin/deals-restaurants-items-list";
+      'http://54.177.165.108:3000/api/admin/deals-restaurants-items-list';
     var bodyFormData = new URLSearchParams();
-    bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
-    bodyFormData.append("restaurant_id", id);
+    bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+    bodyFormData.append('restaurant_id', id);
 
     axios({
-      method: "post",
+      method: 'post',
       url: myURL,
       data: bodyFormData,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     })
       .then(async (response) => {
-        console.log("getItemList", response["data"]["data"]);
-        setGetItemList(response["data"]["data"]);
+        console.log('getItemList', response['data']['data']);
+        setGetItemList(response['data']['data']);
       })
       .catch((error) => {
-        console.log("Errors", error);
+        console.log('Errors', error);
       });
   };
   const validate = () => {
@@ -163,59 +163,59 @@ export default function UpdateDeals() {
 
     if (!deal.restaurant_id) {
       isValid = false;
-      error["restaurant"] = "Please select restaurant";
+      error['restaurant'] = 'Please select restaurant';
     }
     if (itemIDArray.length == 0) {
       isValid = false;
-      error["restItems"] = "Please select restaurant item";
+      error['restItems'] = 'Please select restaurant item';
     }
     if (!addPicture) {
       isValid = false;
-      error["image"] = "Please select image";
+      error['image'] = 'Please select image';
     }
-    if (!input["pts_one"].trim()) {
+    if (!input['pts_one'].trim()) {
       isValid = false;
-      error["pts_one"] = "Please enter pts one";
+      error['pts_one'] = 'Please enter pts one';
     }
-    if (!input["title"].trim()) {
+    if (!input['title'].trim()) {
       isValid = false;
-      error["title"] = "Please enter title";
+      error['title'] = 'Please enter title';
     }
-    if (!input["short_desc"].trim()) {
+    if (!input['short_desc'].trim()) {
       isValid = false;
-      error["short_desc"] = "Please enter short description";
+      error['short_desc'] = 'Please enter short description';
     }
-    if (!input["description"].trim()) {
+    if (!input['description'].trim()) {
       isValid = false;
-      error["description"] = "Please enter description";
+      error['description'] = 'Please enter description';
     }
-    if (!input["terms_conditions"].trim()) {
+    if (!input['terms_conditions'].trim()) {
       isValid = false;
-      error["terms_conditions"] = "Please enter terms condition";
+      error['terms_conditions'] = 'Please enter terms condition';
     }
-    if (!input["start_date"].trim()) {
+    if (!input['start_date'].trim()) {
       isValid = false;
-      error["start_date"] = "Please select start date";
+      error['start_date'] = 'Please select start date';
     }
-    if (!input["end_date"].trim()) {
+    if (!input['end_date'].trim()) {
       isValid = false;
-      error["end_date"] = "Please select end date";
+      error['end_date'] = 'Please select end date';
     }
-    if (input["start_date"].trim() && input["end_date"].trim()) {
+    if (input['start_date'].trim() && input['end_date'].trim()) {
       if (deal.end_date < deal.start_date) {
         isValid = false;
 
-        error["end_date"] = "End date should be greater than the start date";
+        error['end_date'] = 'End date should be greater than the start date';
       } else {
         var date = deal.end_date;
-        var array = date.split("-");
+        var array = date.split('-');
         var reverseArray = array.reverse();
-        setEndDate(reverseArray.join("-"));
-        console.log("-----", deal);
+        setEndDate(reverseArray.join('-'));
+        console.log('-----', deal);
         date = deal.start_date;
-        array = date.split("-");
+        array = date.split('-');
         reverseArray = array.reverse();
-        setStartDate(reverseArray.join("-"));
+        setStartDate(reverseArray.join('-'));
       }
     }
     setError(error);
@@ -233,19 +233,19 @@ export default function UpdateDeals() {
       setDisable(true);
       setPicture(e.target.files[0]);
       setAddPicture(true);
-      console.log("PHOTO===>", e?.target?.files[0]);
+      console.log('PHOTO===>', e?.target?.files[0]);
 
       const myurl = `http://54.177.165.108:3000/api/admin/upload-img`;
       var bodyFormData = new FormData();
-      bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
-      bodyFormData.append("image", e?.target?.files[0]);
+      bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+      bodyFormData.append('image', e?.target?.files[0]);
       axios({
-        method: "post",
+        method: 'post',
         url: myurl,
         data: bodyFormData,
       })
         .then((result) => {
-          console.log("Success:=====", result);
+          console.log('Success:=====', result);
           setdeal({
             ...deal,
             image: result?.data?.data?.url,
@@ -255,7 +255,7 @@ export default function UpdateDeals() {
           //getBanners();
         })
         .catch((error) => {
-          console.error("Error:", error);
+          console.error('Error:', error);
           setDisable(false);
           setPicture();
           setAddPicture(false);
@@ -265,7 +265,7 @@ export default function UpdateDeals() {
       setPicture();
       setAddPicture(false);
       setDisable(false);
-      setImg({ src: "", alt: "" });
+      setImg({ src: '', alt: '' });
     }
   };
 
@@ -274,36 +274,36 @@ export default function UpdateDeals() {
     setDisable(true);
 
     if (validate()) {
-      const myurl = "http://54.177.165.108:3000/api/admin/update-deals";
+      const myurl = 'http://54.177.165.108:3000/api/admin/update-deals';
       var bodyFormData = new URLSearchParams();
-      bodyFormData.append("auth_code", "Brud#Cust$&$Resto#MD");
-      bodyFormData.append("deals_id", deal.id);
-      bodyFormData.append("restaurant_id", deal.restaurant_id);
-      bodyFormData.append("item_id", itemIDArray.join(","));
-      bodyFormData.append("pts_one", deal.pts_one);
-      bodyFormData.append("title", deal.title);
-      bodyFormData.append("short_desc", deal.short_desc);
-      bodyFormData.append("description", deal.description);
-      bodyFormData.append("terms_conditions", deal.terms_conditions);
-      bodyFormData.append("image", deal.img);
-      bodyFormData.append("start_date", deal.start_date);
-      bodyFormData.append("end_date", deal.end_date);
+      bodyFormData.append('auth_code', 'Brud#Cust$&$Resto#MD');
+      bodyFormData.append('deals_id', deal.id);
+      bodyFormData.append('restaurant_id', deal.restaurant_id);
+      bodyFormData.append('item_id', itemIDArray.join(','));
+      bodyFormData.append('pts_one', deal.pts_one);
+      bodyFormData.append('title', deal.title);
+      bodyFormData.append('short_desc', deal.short_desc);
+      bodyFormData.append('description', deal.description);
+      bodyFormData.append('terms_conditions', deal.terms_conditions);
+      bodyFormData.append('image', deal.img);
+      bodyFormData.append('start_date', deal.start_date);
+      bodyFormData.append('end_date', deal.end_date);
 
       axios({
-        method: "post",
+        method: 'post',
         url: myurl,
         data: bodyFormData,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
         .then((response) => {
-          console.log(response["data"]["data"]);
-          console.log("Successfull!!!!");
+          console.log(response['data']['data']);
+          console.log('Successfull!!!!');
           setDisable(false);
-          toast.success("Updated Successfully...!");
+          toast.success('Updated Successfully...!');
           history.push(`/deals`);
         })
         .catch((error) => {
-          console.log("Errors", error);
+          console.log('Errors', error);
           setDisable(false);
         });
     } else {
@@ -330,15 +330,15 @@ export default function UpdateDeals() {
             </li>
             <li className="breadcrumb-item currentPath">{deal.title}</li>
           </ol>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex' }}>
             <i
               className="fa fa-arrow-left edit"
               onClick={useHistory().goBack}
               style={{
-                cursor: "pointer",
-                fontSize: "20px",
-                marginTop: "7px",
-                marginRight: "10px",
+                cursor: 'pointer',
+                fontSize: '20px',
+                marginTop: '7px',
+                marginRight: '10px',
               }}
             ></i>
             <h1 className="page-header">Update Restaurant Detail</h1>
@@ -348,10 +348,10 @@ export default function UpdateDeals() {
             <div className="card-body">
               <div
                 className="row RestName p-5"
-                style={{ borderRadius: "20px" }}
+                style={{ borderRadius: '20px' }}
               >
                 <div className="mx-auto ">
-                  <span style={{ fontSize: "18px", fontWeight: "700" }}>
+                  <span style={{ fontSize: '18px', fontWeight: '700' }}>
                     {deal.title}
                   </span>
                 </div>
@@ -365,18 +365,18 @@ export default function UpdateDeals() {
                     <select
                       id="inputState"
                       class="form-control ml-0"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       onChange={(e) => {
-                        if (e.target.value != "Choose Restaurant") {
+                        if (e.target.value != 'Choose Restaurant') {
                           setRestDataID(e.target.value);
                           setdeal({ ...deal, restaurant_id: e.target.value });
 
                           selectRestaurant(e);
                           console.log(e.target.value);
                         } else {
-                          setRestDataID("");
+                          setRestDataID('');
                           setItemIDArray([]);
-                          setItemID("");
+                          setItemID('');
                         }
                       }}
                     >
@@ -385,14 +385,14 @@ export default function UpdateDeals() {
                       </option>
                       {resto.map((e, i) => {
                         if (
-                          e?.restaurant_name != "" &&
+                          e?.restaurant_name != '' &&
                           e?.restaurant_name != undefined &&
-                          e?.restaurant_name != "N/A"
+                          e?.restaurant_name != 'N/A'
                         ) {
                           return (
                             <option value={e?.id}>
                               {e?.restaurant_name} &nbsp; → &nbsp;
-                              {e?.email ? e?.email : "N/A"}
+                              {e?.email ? e?.email : 'N/A'}
                             </option>
                           );
                         }
@@ -407,13 +407,13 @@ export default function UpdateDeals() {
                         <select
                           id="inputState"
                           class="form-control ml-0"
-                          style={{ borderRadius: "20px" }}
+                          style={{ borderRadius: '20px' }}
                           onChange={(e) => {
-                            if (e.target.value != "Choose Items") {
+                            if (e.target.value != 'Choose Items') {
                               setItemID(e.target.value);
                               setdeal({ ...deal, item_id: e.target.value });
                             } else {
-                              setItemID("");
+                              setItemID('');
                             }
                           }}
                         >
@@ -422,8 +422,8 @@ export default function UpdateDeals() {
                             return (
                               <option value={e?.id} name={e?.item_name}>
                                 {e?.category_type} &nbsp; → &nbsp;
-                                {e?.item_name} &nbsp; → &nbsp; price:{" "}
-                                {e?.price?.replace("$", "")}
+                                {e?.item_name} &nbsp; → &nbsp; price:{' '}
+                                {e?.price?.replace('$', '')}
                               </option>
                             );
                           })}
@@ -431,11 +431,11 @@ export default function UpdateDeals() {
                         <button
                           className="btn btn-sm btn-primary ml-2"
                           style={{
-                            borderRadius: "20px",
-                            height: "30px",
-                            marginTop: "6px",
-                            backgroundColor: "#f55800",
-                            color: "#fff",
+                            borderRadius: '20px',
+                            height: '30px',
+                            marginTop: '6px',
+                            backgroundColor: '#f55800',
+                            color: '#fff',
                           }}
                           onClick={(e) => {
                             e.preventDefault();
@@ -446,7 +446,7 @@ export default function UpdateDeals() {
                             // setItemNameArray([
                             //   ...new Set([...itemNameArray, itemID]),
                             // ]);
-                            setItemID("");
+                            setItemID('');
                           }}
                         >
                           Add
@@ -461,23 +461,23 @@ export default function UpdateDeals() {
                                 <button
                                   className="btn btn-primary m-4 placeButton"
                                   style={{
-                                    borderRadius: "20px",
-                                    backgroundColor: "#f55800",
-                                    color: "#fff",
+                                    borderRadius: '20px',
+                                    backgroundColor: '#f55800',
+                                    color: '#fff',
                                   }}
                                   onClick={(e) => {
                                     e.preventDefault();
                                   }}
                                 >
                                   {subItems.category_type +
-                                    " -> " +
+                                    ' -> ' +
                                     subItems.item_name +
-                                    "-> " +
-                                    subItems.price.replace("$", "")}
+                                    '-> ' +
+                                    subItems.price.replace('$', '')}
                                   <span className="placeDeleteIcon">
                                     <i
                                       className="fa fa-trash placeDeleteIcon"
-                                      style={{ marginLeft: "5px" }}
+                                      style={{ marginLeft: '5px' }}
                                       onClick={(e1) => {
                                         e1.preventDefault();
                                         let array = itemIDArray;
@@ -514,7 +514,7 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="exampleInputPassword1"
                       placeholder="title"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="title"
                       value={deal.title}
                       onChange={(e) =>
@@ -533,7 +533,7 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="exampleInputPassword1"
                       placeholder="pts one"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="pts_one"
                       value={deal.pts_one}
                       onChange={(e) =>
@@ -554,7 +554,7 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="exampleInputPassword1"
                       placeholder="short description"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="short_desc"
                       value={deal.short_desc}
                       onChange={(e) =>
@@ -574,7 +574,7 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="exampleFormControlTextarea1"
                       rows="3"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="description"
                       value={deal.description}
                       onChange={(e) =>
@@ -593,7 +593,7 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="exampleInputPassword1"
                       placeholder="terms conditions"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="terms_conditions"
                       value={deal.terms_conditions}
                       onChange={(e) =>
@@ -612,21 +612,21 @@ export default function UpdateDeals() {
                       type="file"
                       name="image"
                       onChange={uploadPicture}
-                      style={{ marginLeft: "-10px" }}
+                      style={{ marginLeft: '-10px' }}
                     />
                     <br />
-                    {deal.image != "" ? (
+                    {deal.image != '' ? (
                       <img
                         src={deal.image}
                         className="form-img__img-preview"
-                        style={{ width: "84px", height: "84px" }}
+                        style={{ width: '84px', height: '84px' }}
                         alt="imgs"
                       />
                     ) : (
                       <img
                         src="https://www.teaforturmeric.com/wp-content/uploads/2021/11/Masala-Chai-Tea-Recipe-Card.jpg"
                         className="form-img__img-preview"
-                        style={{ width: "84px", height: "84px" }}
+                        style={{ width: '84px', height: '84px' }}
                         alt="imgs"
                       />
                     )}
@@ -639,16 +639,16 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="date"
                       placeholder="DD-MM-YYYY"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="start_date"
-                      value={deal.start_date?.split("-").reverse().join("-")}
+                      value={deal.start_date?.split('-').reverse().join('-')}
                       onChange={(e) => {
                         setdeal({
                           ...deal,
                           start_date: e.target.value
-                            ?.split("-")
+                            ?.split('-')
                             .reverse()
-                            .join("-"),
+                            .join('-'),
                         });
                       }}
                     />
@@ -661,16 +661,16 @@ export default function UpdateDeals() {
                       className="form-control ml-0"
                       id="date"
                       placeholder="DD-MM-YYYY"
-                      style={{ borderRadius: "20px" }}
+                      style={{ borderRadius: '20px' }}
                       name="end_date"
-                      value={deal.end_date?.split("-").reverse().join("-")}
+                      value={deal.end_date?.split('-').reverse().join('-')}
                       onChange={(e) => {
                         setdeal({
                           ...deal,
                           end_date: e.target.value
-                            ?.split("-")
+                            ?.split('-')
                             .reverse()
-                            .join("-"),
+                            .join('-'),
                         });
                       }}
                     />
@@ -680,8 +680,13 @@ export default function UpdateDeals() {
                     type="submit"
                     className="btn btn-primary"
                     disabled={disable}
+                    style={{
+                      borderRadius: '20px',
+                      backgroundColor: '#f55800',
+                      color: '#fff',
+                    }}
                   >
-                    {disable ? "Processing..." : "Submit"}
+                    {disable ? 'Processing...' : 'Submit'}
                   </button>
                 </form>
               </div>

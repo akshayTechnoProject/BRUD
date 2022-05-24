@@ -249,19 +249,9 @@ export default function AddDeals(props) {
       setDisable(false);
     }
   };
-  const getOptions = resto.map((e, i) => {
-    if (
-      e?.restaurant_name != '' &&
-      e?.restaurant_name != undefined &&
-      e?.restaurant_name != 'N/A'
-    ) {
-      return { value: e?.id, label: e?.restaurant_name };
-    }
-  });
 
   console.log('Item Array:', itemIDArray.toString());
   console.log('Item Name:', itemName);
-  console.log('>>>>>:', formData);
 
   return (
     <>
